@@ -1,0 +1,13 @@
+[tool.ruff]
+line-length = 140
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "W"]
+ignore = ["E501", "E741", "B905", "UP017"]
+
+[tool.ruff.lint.per-file-ignores]
+"pipeline/tests/*" = ["E702", "E731"]
+
+[tool.pytest.ini_options]
+testpaths = ["pipeline/tests"]

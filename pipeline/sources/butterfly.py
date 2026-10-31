@@ -12,7 +12,6 @@ import re
 from datetime import date, timedelta
 
 import numpy as np
-import pandas as pd
 
 from ..core import Source, ValidationError, ensure_not_html, http_get
 

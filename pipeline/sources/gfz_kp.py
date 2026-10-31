@@ -6,7 +6,6 @@ Den gamle datapub-URL-en (datapub.gfz-potsdam.de/download/10.5880.Kp.0001/...) g
 
 from __future__ import annotations
 
-import numpy as np
 import pandas as pd
 
 from ..core import Source, ValidationError, check_range, ensure_not_html, http_get, r

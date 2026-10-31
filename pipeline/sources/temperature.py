@@ -10,9 +10,7 @@ Versjonsnummeret i HadCRUT-URL-en endres av og til; modulen prøver nyere versjo
 from __future__ import annotations
 
 import io
-import re
 
-import numpy as np
 import pandas as pd
 
 from ..core import Source, ValidationError, check_range, ensure_not_html, http_get, r
