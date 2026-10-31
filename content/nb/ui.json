@@ -1,0 +1,71 @@
+{
+  "lang": "nb",
+  "site": { "name": "Solflekker", "description": "Solflekker, solsyklusen og hva dataene faktisk sier om sol og jord – med åpne data og ærlig statistikk." },
+  "nav": [
+    { "key": "home", "route": "/", "label": "Dashbord" },
+    { "key": "hva", "route": "/hva-er-solflekker/", "label": "Hva er solflekker?" },
+    { "key": "historien", "route": "/historien/", "label": "Historien" },
+    { "key": "data", "route": "/dataserier/", "label": "Data" },
+    { "key": "sol-og-jord", "route": "/sol-og-jord/", "label": "Sol og jord" },
+    { "key": "metode", "route": "/metode/", "label": "Metode og kilder" }
+  ],
+  "a11y": {
+    "skip": "Hopp til innhold",
+    "menu": "Meny",
+    "main_nav": "Hovedmeny",
+    "theme": "Bytt mellom lys og mørk modus"
+  },
+  "footer": {
+    "line1": "Kode: MIT-lisens. Ingen sporing, ingen cookies, ingen eksterne tjenester under kjøring.",
+    "line2": "Dataene følger kildenes lisenser – se",
+    "sources_link": "Metode og kilder",
+    "built": "Siden ble sist bygget",
+    "repo": "Kildekode på GitHub"
+  },
+  "pager": { "label": "Neste og forrige tema", "prev": "Forrige", "next": "Neste" },
+  "notfound": { "title": "Siden finnes ikke", "text": "Vi fant ikke siden du lette etter.", "home": "Til forsiden" },
+  "evidence": {
+    "box_title": "Vurdering av evidensen",
+    "a": { "label": "Godt etablert", "desc": "Nivå A – godt etablert: målt gjentatte ganger, med en kjent fysisk mekanisme og bred enighet i fagmiljøet." },
+    "b": { "label": "Omdiskutert", "desc": "Nivå B – omdiskutert hypotese: publiserte signaler eller mulige mekanismer, men svak, motstridende eller ikke reprodusert evidens." },
+    "c": { "label": "Uten støtte", "desc": "Nivå C – påstand uten støtte: ingen robust statistisk sammenheng, ingen kjent mekanisme eller direkte motbevist." }
+  },
+  "chart": {
+    "loading": "Laster graf …",
+    "error": "Grafen kunne ikke vises. Prøv å laste siden på nytt.",
+    "table_summary": "Vis dataene som tabell",
+    "table_rows": "Viser",
+    "table_of": "av",
+    "table_rows_suffix": "rader i valgt periode",
+    "download": "Last ned CSV",
+    "source": "Kilde",
+    "updated": "Sist hentet",
+    "last_point": "Siste datapunkt",
+    "stale": "Utdatert: siste forsøk på oppdatering feilet, viser siste gode versjon",
+    "period": "Periode",
+    "from": "Fra",
+    "to": "Til",
+    "apply": "Bruk",
+    "all": "Alle",
+    "reset": "Nullstill",
+    "last_n": "Siste {n} år",
+    "units": "Enhet"
+  },
+  "sources": {
+    "status_ok": "OK",
+    "status_stale": "Utdatert",
+    "status_failed": "Ikke hentet",
+    "group": { "daily": "oppdateres daglig", "monthly": "oppdateres månedlig", "yearly": "oppdateres årlig" },
+    "last_fetched": "Sist endret",
+    "last_point": "Siste datapunkt",
+    "provider": "Leverandør",
+    "urls": "Datafiler",
+    "license": "Lisens og vilkår",
+    "citation": "Kildehenvisning",
+    "frequency": "Oppdatering",
+    "caveats": "Kjente svakheter",
+    "fallback": "Reserveløsning",
+    "error": "Siste feil"
+  },
+  "timeline": { "label": "Interaktiv tidslinje", "hint": "Bruk piltastene eller knappene for å bla mellom hendelser.", "prev": "Forrige", "next": "Neste", "all": "Alle", "filter": "Vis" }
+}

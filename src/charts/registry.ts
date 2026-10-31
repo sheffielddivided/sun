@@ -1,0 +1,33 @@
+import type { ChartFactory } from '../lib/chart';
+
+/** Hver graf lastes i en egen chunk, så sidene bare henter koden de bruker. */
+export const registry: Record<string, ChartFactory> = {
+  'home-cycle25': () => import('./home').then((m) => m.cycle25()),
+  'home-ssn-daily': () => import('./home').then((m) => m.ssnDaily()),
+  'home-f107': () => import('./home').then((m) => m.f107Recent()),
+  'home-kp': () => import('./home').then((m) => m.kpRecent()),
+  'data-ssn-monthly': () => import('./data').then((m) => m.ssnMonthly()),
+  'data-ssn-yearly': () => import('./data').then((m) => m.ssnYearly()),
+  'data-group': () => import('./data').then((m) => m.groupNumber()),
+  'data-cycles': () => import('./data').then((m) => m.cyclesOverlay()),
+  'data-hemispheric': () => import('./data').then((m) => m.hemispheric()),
+  'data-butterfly': () => import('./data').then((m) => m.butterfly()),
+  'tsi-series': () => import('./earth').then((m) => m.tsiSeries()),
+  'tsi-cycle-range': () => import('./earth').then((m) => m.tsiCycleRange()),
+  'temp-series': () => import('./earth').then((m) => m.tempSeries()),
+  'temp-lag': () => import('./earth').then((m) => m.lagScanTemp()),
+  'cosmic-series': () => import('./earth').then((m) => m.cosmicSeries()),
+  'cosmic-lag': () => import('./earth').then((m) => m.lagScanCosmic()),
+  'geomag-annual': () => import('./earth').then((m) => m.geomagAnnual()),
+  'geomag-phase': () => import('./earth').then((m) => m.geomagPhase()),
+  'maunder-series': () => import('./earth').then((m) => m.maunderChart()),
+  'regional-lag': () => import('./earth').then((m) => m.regionalLag()),
+  'regional-nao': () => import('./earth').then((m) => m.naoSeries()),
+  'volcano-timeline': () => import('./volcano').then((m) => m.volcanoTimeline()),
+  'volcano-reporting': () => import('./volcano').then((m) => m.volcanoReporting()),
+  'volcano-phase': () => import('./volcano').then((m) => m.volcanoPhase()),
+  'volcano-sea': () => import('./volcano').then((m) => m.volcanoSea()),
+  'volcano-scenarios': () => import('./volcano').then((m) => m.volcanoScenarios()),
+  'spurious-example': () => import('./earth').then((m) => m.spuriousExample()),
+  'spurious-rates': () => import('./earth').then((m) => m.spuriousRates()),
+};

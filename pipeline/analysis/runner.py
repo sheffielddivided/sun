@@ -6,7 +6,7 @@ import logging
 
 from ..core import DATA_DIR, now_iso, write_json
 from . import context, solar_earth, volcano
-from .cycles import build_cycles
+from .cycles import build_cycles, summarize
 from .data import monthly_ssn
 
 log = logging.getLogger("pipeline.analysis")
@@ -19,7 +19,7 @@ def run_analyses(manifest: dict, outdir=DATA_DIR) -> dict:
         cycles = build_cycles(m["t"], m["smoothed"])
         if len(cycles) < 24:
             raise ValueError(f"Fant bare {len(cycles)} sykluser (forventet ≥ 25)")
-        write_json("cycles.json", {"cycles": cycles, "method": "Minima i 13-måneders glattet månedlig solflekktall (SILSO V2.0); syklus 1 = minimum rundt 1755."}, outdir)
+        write_json("cycles.json", {"summary": summarize(cycles), "cycles": cycles, "method": "Minima i 13-måneders glattet månedlig solflekktall (SILSO V2.0); syklus 1 = minimum rundt 1755."}, outdir)
         status["cycles"] = {"status": "ok", "n_cycles": len(cycles), "n_tests": 0}
     except Exception as e:  # noqa: BLE001
         log.error("Syklusdeteksjon feilet: %s", e)

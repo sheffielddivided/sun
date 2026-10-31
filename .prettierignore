@@ -1,0 +1,6 @@
+dist
+node_modules
+public/data
+pipeline
+.github
+package-lock.json

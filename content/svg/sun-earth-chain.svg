@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 270" role="img" aria-labelledby="t3 d3" font-family="system-ui, sans-serif" font-size="14">
+  <title id="t3">Fra solutbrudd til nordlys</title>
+  <desc id="d3">Skjematisk kjede fra Solen til Jorden. Et solutbrudd sender elektromagnetisk stråling som når Jorden på omtrent åtte minutter. Et koronamasseutkast, en sky av plasma og magnetfelt, bruker typisk ett til tre døgn. Når skyen treffer Jordens magnetfelt kan det gi en geomagnetisk storm og nordlys i områdene rundt nordlysovalen.</desc>
+  <circle cx="70" cy="125" r="46" fill="#f0b84a"/>
+  <circle cx="58" cy="116" r="6" fill="#3d1d05"/><circle cx="82" cy="136" r="4" fill="#3d1d05"/>
+  <g stroke="#f0b84a" stroke-width="3" stroke-linecap="round"><path d="M70 62v-14M70 202v14M7 125H-5M133 125h8" /></g>
+  <path d="M112 110Q170 80 250 100" fill="none" stroke="var(--s1)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M112 125Q250 125 400 125" fill="none" stroke="var(--s1)" stroke-width="3" stroke-dasharray="3 6"/>
+  <path d="M112 142Q170 190 300 170" fill="none" stroke="var(--s2)" stroke-width="12" stroke-linecap="round" stroke-opacity=".55"/>
+  <path d="M290 170l24 -4l-10 16z" style="fill:var(--s2)"/>
+  <circle cx="620" cy="125" r="46" fill="#2f78c4"/><path d="M590 105Q620 90 650 108M595 140Q625 152 650 140" fill="none" stroke="#7bc47a" stroke-width="9" stroke-opacity=".9"/>
+  <path d="M560 70Q520 125 560 180" fill="none" style="stroke:var(--s4)" stroke-width="3.5"/>
+  <path d="M545 55Q490 125 545 195" fill="none" style="stroke:var(--s4)" stroke-width="2" stroke-dasharray="5 4"/>
+  <g style="fill:currentColor">
+    <text x="20" y="250" font-weight="700">Solen</text>
+    <text x="595" y="250" font-weight="700">Jorden</text>
+    <text x="150" y="76" font-size="13">Solutbrudd (flare):</text>
+    <text x="150" y="94" font-size="13" dx="0" dy="-0">lys og røntgen, ca. 8 min</text>
+    <text x="300" y="148" font-size="13">stråling med lyshastighet</text>
+    <text x="120" y="212" font-size="13">Koronamasseutkast (CME):</text>
+    <text x="120" y="229" font-size="13">plasmasky, ofte 1–3 døgn</text>
+    <text x="440" y="46" font-size="13" text-anchor="middle">Jordens magnetfelt</text>
+    <text x="640" y="64" font-size="13" text-anchor="middle">nordlys</text>
+  </g>
+</svg>

@@ -256,7 +256,7 @@ def analyse_geomag(cycles: list[dict], outdir=DATA_DIR) -> dict:
         prof["storm_days"].append(float(np.mean(cyc_mean_st[b])))
         prof["storm_sd"].append(float(np.std(cyc_mean_st[b], ddof=1)))
     peak_bin = int(np.argmax(prof["storm_days"]))
-    res["phase_profile"] = {"bins": nb, "n_cycles": len(first_full), "cycles": [c["n"] for c in first_full], **prof, "storm_peak_bin": peak_bin}
+    res["phase_profile"] = {"bins": nb, "n_cycles": len(first_full), "cycles": [c["n"] for c in first_full], **prof, "storm_peak_bin": peak_bin, "storm_peak_from_pct": peak_bin * 100 // nb, "storm_peak_to_pct": (peak_bin + 1) * 100 // nb}
     # Scatter + totalt
     yrs, (xs, st) = align(ssn_y, storm_y)
     res["scatter"] = {"year": yrs.tolist(), "ssn": xs.tolist(), "storm_days": st.tolist()}

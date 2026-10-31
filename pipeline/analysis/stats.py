@@ -178,6 +178,7 @@ def lag_scan(x: np.ndarray, y: np.ndarray, lags: list[int], rng: np.random.Gener
         "best_lag": rows[best]["lag"],
         "best_r": rows[best]["r"],
         "p_family": p_family,
+        "min_p_holm": min(row["p_holm"] for row in rows),
     }
 
 

@@ -60,3 +60,29 @@ def phase_of(times: np.ndarray, cycles: list[dict]) -> np.ndarray:
         m = (times >= c["start_t"]) & (times < c["end_t"])
         out[m] = (times[m] - c["start_t"]) / (c["end_t"] - c["start_t"])
     return out
+
+
+def summarize(cycles: list[dict]) -> dict:
+    """Nøkkeltall for fullførte sykluser (brukes i tekstene på nettsiden)."""
+    done = [c for c in cycles if c["complete"]]
+    lens = [c["length_years"] for c in done]
+    maxs = [c["max_smoothed"] for c in done]
+    imax = int(np.argmax(maxs))
+    imin = int(np.argmin(maxs))
+    ilong = int(np.argmax(lens))
+    ishort = int(np.argmin(lens))
+    return {
+        "n_complete": len(done),
+        "mean_length_years": float(np.mean(lens)),
+        "median_length_years": float(np.median(lens)),
+        "min_length_years": float(lens[ishort]),
+        "min_length_cycle": done[ishort]["n"],
+        "max_length_years": float(lens[ilong]),
+        "max_length_cycle": done[ilong]["n"],
+        "mean_max_smoothed": float(np.mean(maxs)),
+        "highest_cycle": done[imax]["n"],
+        "highest_max": float(maxs[imax]),
+        "lowest_cycle": done[imin]["n"],
+        "lowest_max": float(maxs[imin]),
+        "mean_rise_years": float(np.mean([c["rise_years"] for c in done])),
+    }

@@ -73,6 +73,6 @@ def test_spurious_demo_runs_small(tmp_path):
 
     yrs = list(range(1900, 2026))
     write_json("ssn_yearly.json", {"year": yrs, "ssn": [float(100 + 60 * np.sin(2 * np.pi * (y - 1900) / 11)) for y in yrs]}, tmp_path)
-    res = context.analyse_spurious(tmp_path, n_sim=30, n_surr=49)
-    walk = res["scenarios"][2]
+    res = context.analyse_spurious(tmp_path, n_sim=30, n_surr=49, n_dredge=50)
+    walk = res["scenarios"][3]  # to uavhengige tilfeldige vandringer
     assert walk["false_positive_naive"] >= walk["false_positive_surrogate"]

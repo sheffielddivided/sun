@@ -1,0 +1,190 @@
+{
+  "categories": {
+    "observasjon": {
+      "label": "Observasjoner",
+      "color": "var(--s1)"
+    },
+    "forstaaelse": {
+      "label": "Forståelse og teori",
+      "color": "var(--s2)"
+    },
+    "dataserie": {
+      "label": "Dataserien",
+      "color": "var(--s3)"
+    },
+    "hendelse": {
+      "label": "Hendelser og aktivitet",
+      "color": "var(--s4)"
+    }
+  },
+  "events": [
+    {
+      "sort": -28,
+      "label": "ca. 28 f.Kr.",
+      "category": "observasjon",
+      "title": "Kinesiske astronomer fører tilsyn med mørke flekker på Solen",
+      "text": "Kinesiske hoffastronomer noterte med det blotte øyet store mørke flekker på Solen, ofte ved soloppgang eller solnedgang eller gjennom tåke. Blant de eldste oppføringene som regnes som pålitelige, er en fra tiden rundt 28 f.Kr. De kinesiske kildene er samlet i kataloger som dekker flere tusen år, men registreringene er sporadiske og uten tall som kan sammenlignes direkte med dagens solflekktall.",
+      "source": "Wittmann & Xu (1987); Yau & Stephenson (1988)"
+    },
+    {
+      "sort": 1128,
+      "label": "1128",
+      "category": "observasjon",
+      "title": "John av Worcester tegner flekkene",
+      "text": "I en krønike fra Worcester i England, tilskrevet John av Worcester, finnes en tegning av to mørke områder på Solen fra desember 1128. Den regnes som den eldste kjente tegningen av solflekker i Europa.",
+      "source": "Wittmann & Xu (1987)"
+    },
+    {
+      "sort": 1610,
+      "label": "1610–1613",
+      "category": "observasjon",
+      "title": "Teleskopet avslører flekkene: Harriot, Fabricius, Scheiner og Galilei",
+      "text": "Rett etter at teleskopet kom i bruk, tegnet englenderen Thomas Harriot solflekker (første kjente teleskopobservasjon er fra desember 1610). Johannes Fabricius publiserte sine observasjoner i 1611. Galileo Galilei og jesuitten Christoph Scheiner observerte også flekkene, og de kranglet om hvem som kom først og om hva flekkene er. I 1613 argumenterte Galilei for at flekkene ligger på eller nær Solens overflate og endrer seg, i strid med idealet om en uforanderlig himmel.",
+      "source": "Galilei (1613); Hathaway (2015)"
+    },
+    {
+      "sort": 1645,
+      "label": "ca. 1645–1715",
+      "category": "hendelse",
+      "title": "Maunder-minimumet",
+      "text": "I tiårene rundt 1645–1715 ble det registrert svært få flekker, selv om teleskopobservasjoner pågikk. Gruppetallene er flere ganger lavere enn før og etter. Perioden ble gjort kjent av John A. Eddy i 1976, og er oppkalt etter ekteparet E. W. og A. S. D. Maunder, som hadde pekt på mangelen på flekker. Hvor «flatt» minimumet var, og hvordan det påvirket klimaet, er fortsatt gjenstand for forskning.",
+      "source": "Eddy (1976); Usoskin (2017)"
+    },
+    {
+      "sort": 1749,
+      "label": "1749",
+      "category": "dataserie",
+      "title": "Starten på den månedlige solflekkserien",
+      "text": "Den månedlige serien av solflekktall begynner i 1749, den årlige i 1700. Rudolf Wolf (Zürich) satte den sammen fra eldre observasjoner. De første sykluser telles fra minimumet rundt 1755, som er syklus 1 – en konvensjon som fortsatt brukes.",
+      "source": "Clette m.fl. (2014)"
+    },
+    {
+      "sort": 1790,
+      "label": "ca. 1790–1830",
+      "category": "hendelse",
+      "title": "Dalton-minimumet",
+      "text": "En periode med lave og forsinkede sykluser, oppkalt etter John Dalton. Syklus 5 og 6 hadde de laveste toppene i hele den moderne serien (omtrent 80 i glattet solflekktall). Perioden falt sammen med flere store vulkanutbrudd, blant dem Tambora i 1815.",
+      "source": "SILSO V2.0; Usoskin (2017)"
+    },
+    {
+      "sort": 1843,
+      "label": "1826–1844",
+      "category": "forstaaelse",
+      "title": "Schwabe finner syklusen",
+      "text": "Den tyske apotekeren og amatørastronomen Heinrich Schwabe observerte Solen nesten hver klare dag fra 1826 og fant at antallet flekkegrupper varierte med en periode på omtrent ti år. Han offentliggjorde funnet i 1844. Den moderne gjennomsnittlige lengden er litt over 11 år.",
+      "source": "Schwabe (1844)"
+    },
+    {
+      "sort": 1848,
+      "label": "1848",
+      "category": "dataserie",
+      "title": "Wolf innfører relativtallet – Zürich-serien",
+      "text": "Rudolf Wolf i Zürich innførte i 1848 det «relative solflekktallet», senere kalt Wolf-tallet: R = k·(10·g + f), der g er antall flekkgrupper, f antall enkeltflekker og k en faktor for observatør og instrument. Han rekonstruerte serien bakover til 1749 og ledet Zürich-observatoriet til 1893. Serien ble forvaltet i Zürich til 1980 og videre av SILSO i Brussel.",
+      "source": "Clette m.fl. (2014)"
+    },
+    {
+      "sort": 1852,
+      "label": "1852",
+      "category": "forstaaelse",
+      "title": "Solflekker og jordmagnetismen henger sammen",
+      "text": "Edward Sabine, og uavhengig av ham Rudolf Wolf og Alfred Gautier, viste i 1852 at variasjonen i jordens magnetfelt følger solflekksyklusen. Dette er den første påviste koblingen mellom solaktivitet og forhold på Jorden – og den som er best underbygget i dag.",
+      "source": "Hathaway (2015)"
+    },
+    {
+      "sort": 1859,
+      "label": "1859",
+      "category": "hendelse",
+      "title": "Carrington-hendelsen",
+      "text": "1. september 1859 observerte Richard Carrington og Richard Hodgson uavhengig av hverandre et kraftig lysglimt over en stor flekkgruppe. Mindre enn et døgn senere kom en av de sterkeste geomagnetiske stormene som er dokumentert: nordlys ble sett svært langt mot ekvator, og telegrafsystemer sviktet eller ga gnister. Hvor ekstrem hendelsen var, er omdiskutert, siden det ikke fantes moderne instrumenter.",
+      "source": "Carrington (1859); Cliver & Dietrich (2013)"
+    },
+    {
+      "sort": 1904,
+      "label": "1904",
+      "category": "forstaaelse",
+      "title": "Maunders sommerfugldiagram",
+      "text": "Edward Walter Maunder viste at flekkene i begynnelsen av hver syklus oppstår på høye breddegrader og så vandrer mot ekvator. Når breddegraden plottes mot tid, ligner mønsteret sommerfuglvinger. Det bygger på det Gustav Spörer hadde beskrevet tidligere.",
+      "source": "Hathaway (2015)"
+    },
+    {
+      "sort": 1908,
+      "label": "1908",
+      "category": "forstaaelse",
+      "title": "Hale finner magnetfeltet i flekkene",
+      "text": "George Ellery Hale målte i 1908 Zeeman-oppsplitting i spektrallinjer fra solflekker og viste at flekkene har sterke magnetfelt – det første magnetfeltet utenfor Jorden som ble påvist. Det forklarer hvorfor flekkene er kjøligere og mørkere.",
+      "source": "Hale m.fl. (1919); Hathaway (2015)"
+    },
+    {
+      "sort": 1919,
+      "label": "1919",
+      "category": "forstaaelse",
+      "title": "Hales polaritetslover: den 22-årige syklusen",
+      "text": "Hale og medarbeidere viste at flekkparene har motsatt magnetisk polaritet på de to halvkulene, og at polariteten snur fra syklus til syklus. Den magnetiske syklusen er derfor omtrent 22 år lang.",
+      "source": "Hale m.fl. (1919)"
+    },
+    {
+      "sort": 1947,
+      "label": "1947",
+      "category": "dataserie",
+      "title": "Zürich innfører vekting av flekker (Waldmeier)",
+      "text": "Fra 1947 innførte Zürich-observatoriet, under Max Waldmeier, en ny teller-metode der flekker vektes etter størrelse. Endringen ga et kunstig sprang oppover i serien («Waldmeier-sprangen»). Senere analyser, blant annet av Clette og kolleger, viste at dette og flere andre skift ga kunstige sprang i den gamle serien.",
+      "source": "Clette m.fl. (2014); Clette & Lefèvre (2016)"
+    },
+    {
+      "sort": 1976,
+      "label": "1976",
+      "category": "forstaaelse",
+      "title": "Eddy: «The Maunder Minimum»",
+      "text": "John A. Eddy samlet historiske kilder i en artikkel i Science og viste at den svært lave flekkaktiviteten rundt 1645–1715 var reell og ikke bare manglende observasjoner. Det førte til fornyet interesse for hvordan Solens langsiktige variasjon påvirker Jorden.",
+      "source": "Eddy (1976)"
+    },
+    {
+      "sort": 1978,
+      "label": "1978",
+      "category": "dataserie",
+      "title": "Satellittene måler solinnstrålingen",
+      "text": "Med Nimbus-7-satellitten (1978) og senere instrumenter begynte kontinuerlige målinger av total solinnstråling utenfor atmosfæren. Det viste at innstrålingen varierer med omtrent 0,1 % i løpet av en syklus – litt sterkere når Solen har mange flekker, fordi lyse fakler mer enn oppveier de mørke flekkene.",
+      "source": "Kopp (2016)"
+    },
+    {
+      "sort": 1989,
+      "label": "1989",
+      "category": "hendelse",
+      "title": "Geomagnetisk storm i mars: strømbrudd i Québec",
+      "text": "13. mars 1989 førte en kraftig geomagnetisk storm til at strømnettet til Hydro-Québec brøt sammen i omtrent ni timer. Hendelsen er den mest siterte demonstrasjonen av at solstormer kan ramme moderne infrastruktur.",
+      "source": "NOAA SWPC"
+    },
+    {
+      "sort": 2008,
+      "label": "2008–2009",
+      "category": "hendelse",
+      "title": "Uvanlig dypt og langt solminimum",
+      "text": "Overgangen fra syklus 23 til 24 hadde uvanlig mange dager uten flekker, og syklus 24 ble den svakeste siden syklus 14 tidlig på 1900-tallet. Det viser at Solen kan endre aktivitetsnivå fra syklus til syklus.",
+      "source": "SILSO V2.0"
+    },
+    {
+      "sort": 2015,
+      "label": "2015",
+      "category": "dataserie",
+      "title": "Solflekktall versjon 2.0",
+      "text": "1. juli 2015 ga SILSO ut en fullstendig revidert solflekkserie, basert på arbeid som Clette m.fl. (2014) beskrev. Den historiske skalafaktoren 0,6 ble fjernet, så verdiene er omtrent 1,67 ganger høyere enn i den gamle serien, og kjente sprang (blant annet rundt 1947 og i perioden ca. 1880–1915) ble korrigert. I den reviderte serien er forskjellen mellom 1700-/1800-tallet og 1900-tallet mindre enn i den gamle, noe som endret bildet av hvor uvanlig aktiv Solen var på 1900-tallet.",
+      "source": "Clette m.fl. (2014); Clette & Lefèvre (2016)"
+    },
+    {
+      "sort": 2019,
+      "label": "desember 2019",
+      "category": "hendelse",
+      "title": "Solsyklus 25 begynner",
+      "text": "Det glattede solflekktallet nådde minimum i desember 2019, og syklus 25 begynte. Prognosene før syklusen pekte mot en svak syklus omtrent på nivå med syklus 24; observasjonene har så langt vært sterkere.",
+      "source": "SILSO V2.0; NOAA SWPC"
+    },
+    {
+      "sort": 2024,
+      "label": "mai 2024",
+      "category": "hendelse",
+      "title": "Kraftig geomagnetisk storm og nordlys langt mot sør",
+      "text": "10.–11. mai 2024 nådde den geomagnetiske aktiviteten høyeste nivå (G5) på NOAAs skala, den første på over 20 år. Nordlys ble sett på breddegrader der det er svært uvanlig, også i Sør-Europa og Nord-Amerika.",
+      "source": "NOAA SWPC"
+    }
+  ]
+}

@@ -65,37 +65,36 @@ def _ar1(n: int, phi: float, rng: np.random.Generator) -> np.ndarray:
     return x
 
 
-def analyse_spurious(outdir=DATA_DIR, n_sim: int = 400, n_surr: int = 199) -> dict:
-    """Hvor ofte gir helt urelaterte serier «signifikante» korrelasjoner med solflekktallet?"""
+def analyse_spurious(outdir=DATA_DIR, n_sim: int = 400, n_surr: int = 199, n_dredge: int = 3000) -> dict:
+    """Hvor ofte gir helt urelaterte serier «signifikante» korrelasjoner? Tre deler:
+    (1) falsk-positiv-rate for tre testmetoder mot det faktiske solflekktallet,
+    (2) samme for to uavhengige tilfeldige vandringer (to «trender»),
+    (3) «det beste treffet» blant mange tilfeldige kandidater (datafisking)."""
     rng = S.rng_for("spurious")
     ssn = yearly_ssn(outdir)
     years = sorted(y for y in ssn if 1900 <= y <= 2025)
     x = np.array([ssn[y] for y in years], dtype=float)
     N = len(x)
+    walk = lambda: np.cumsum(rng.normal(size=N))  # noqa: E731
+    specs = (
+        ("Hvit støy", lambda: x, lambda: rng.normal(size=N)),
+        ("Autokorrelert støy (AR1, φ = 0,7)", lambda: x, lambda: _ar1(N, 0.7, rng)),
+        ("Tilfeldig vandring mot solflekktall", lambda: x, walk),
+        ("To uavhengige tilfeldige vandringer", walk, walk),
+    )
     scenarios = []
-    ex = None
-    for name, gen in (
-        ("Hvit støy", lambda: rng.normal(size=N)),
-        ("Autokorrelert støy (AR1, φ = 0,7)", lambda: _ar1(N, 0.7, rng)),
-        ("Tilfeldig vandring (som en trend)", lambda: np.cumsum(rng.normal(size=N))),
-    ):
+    for name, xf, yf in specs:
         naive = neff_hits = surr_hits = 0
         abs_r = []
         for _ in range(n_sim):
-            y = gen()
-            r = S.pearson(x, y)
+            xs, y = xf(), yf()
+            r = S.pearson(xs, y)
             abs_r.append(abs(r))
-            p_naive = S.neff_pvalue(r, N)
-            naive += p_naive < 0.05
-            neff = S.effective_n(x, y)
-            neff_hits += S.neff_pvalue(r, neff) < 0.05
-            Sx = S.phase_surrogates(x, n_surr, rng)
+            naive += S.neff_pvalue(r, N) < 0.05
+            neff_hits += S.neff_pvalue(r, S.effective_n(xs, y)) < 0.05
+            Sx = S.phase_surrogates(xs, n_surr, rng)
             rs = S.corr_matrix_rows(Sx, y)
-            p_s = (1 + int((np.abs(rs) >= abs(r) - 1e-12).sum())) / (n_surr + 1)
-            surr_hits += p_s < 0.05
-            if name.startswith("Tilfeldig") and ex is None and abs(r) > 0.6:
-                ex = {"year": years, "ssn": x.tolist(), "random_walk": y.tolist(), "r": r}
-        # Sannsynlighet for minst én «signifikant» av 20 uavhengige kandidater (naiv test)
+            surr_hits += (1 + int((np.abs(rs) >= abs(r) - 1e-12).sum())) / (n_surr + 1) < 0.05
         scenarios.append(
             {
                 "name": name,
@@ -109,16 +108,23 @@ def analyse_spurious(outdir=DATA_DIR, n_sim: int = 400, n_surr: int = 199) -> di
                 "share_abs_r_gt_0_5": float(np.mean(np.array(abs_r) > 0.5)),
             }
         )
-    p0 = scenarios[-1]["false_positive_naive"]
-    # eksempel: hvis vi søker blant 20 urelaterte tilfeldig-vandring-serier
-    at_least_one = 1 - (1 - p0) ** 20
+    # (3) datafisking: det beste treffet blant n_dredge tilfeldige vandringer mot solflekktallet
+    best, best_r, n_gt = None, 0.0, 0
+    for _ in range(n_dredge):
+        y = walk()
+        r = S.pearson(x, y)
+        n_gt += abs(r) > 0.3
+        if abs(r) > abs(best_r):
+            best, best_r = y, r
+    example = {"year": years, "ssn": x.tolist(), "random_walk": best.tolist(), "r": best_r, "n_candidates": n_dredge, "share_abs_r_gt_0_3": n_gt / n_dredge}
+    p0 = scenarios[2]["false_positive_naive"]
     return _round(
         {
-            "n_tests": n_sim * 3,
+            "n_tests": n_sim * len(specs) + n_dredge,
             "period": [years[0], years[-1]],
             "scenarios": scenarios,
-            "at_least_one_of_20_naive_random_walk": at_least_one,
-            "example": ex,
+            "at_least_one_of_20_naive_random_walk": 1 - (1 - p0) ** 20,
+            "example": example,
         },
         4,
     )
