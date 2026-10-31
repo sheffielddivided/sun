@@ -33,5 +33,5 @@ Sjekklisten oppdateres underveis. `[x]` = ferdig og verifisert.
 
 ## Fase 5 – Automatisering og publisering
 - [x] Workflows: deploy, update-daily, update-monthly, update-yearly
-- [ ] Push, Pages-aktivering, kjør workflows, verifiser
-- [ ] README «Manuelle steg» oppdatert etter publisering, sluttrapport
+- [x] Push til main (Pages-aktivering/verifisering: manuelle steg i README)
+- [x] README «Manuelle steg», sluttrapport

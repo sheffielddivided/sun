@@ -60,7 +60,13 @@ Kopier `content/nb/` til `content/en/`, oversett, og bygg med `SITE_LANG=en VITE
 
 ## Manuelle steg
 
-Se bunnen av denne filen (oppdateres etter publisering).
+Kode og workflows er pushet til `main`. Pages-aktivering og første vellykkede deploy kunne ikke verifiseres fra byggemiljøet (`gh` hadde ugyldig token, og MCP-verktøyene kan ikke endre Pages-innstillinger). Gjør dette én gang:
+
+1. GitHub → repoet **sheffielddivided/sun** → **Settings → Pages → Build and deployment → Source: «GitHub Actions»**.
+2. **Settings → Actions → General → Workflow permissions: «Read and write permissions»** (kreves for at oppdateringsworkflows kan committe data), og huk av «Allow GitHub Actions to create and approve pull requests» er *ikke* nødvendig.
+3. **Actions → Deploy → Run workflow** (branch `main`). Siden publiseres på https://sheffielddivided.github.io/sun/.
+4. Kjør deretter **Oppdater månedlig** manuelt én gang (Actions → Run workflow) for å teste hele kjeden: hent → valider → analyser → commit → deploy.
+5. Hvis depotet er privat og planen ikke støtter Pages for private depoter, må depotet gjøres offentlig eller planen oppgraderes.
 
 ## Lisens
 
