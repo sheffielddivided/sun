@@ -10,7 +10,10 @@ interface Ev {
 }
 const files = import.meta.glob('../content/*/timeline.json', { eager: true, import: 'default' }) as Record<string, any>;
 const lang = (import.meta.env.VITE_LANG as string | undefined) ?? 'nb';
-const data = files[Object.keys(files).find((k) => k.includes(`/${lang}/`)) ?? Object.keys(files)[0]] as { categories: Record<string, { label: string; color: string }>; events: Ev[] };
+const data = files[Object.keys(files).find((k) => k.includes(`/${lang}/`)) ?? Object.keys(files)[0]] as {
+  categories: Record<string, { label: string; color: string }>;
+  events: Ev[];
+};
 
 export function mountTimeline(host: HTMLElement): void {
   host.textContent = '';

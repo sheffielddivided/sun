@@ -63,7 +63,9 @@ function csvCell(v: Cell, digits?: number): string {
 export function buildCsv(inst: ChartInstance, sources: SourceEntry[], generated: string | null): string {
   const lines: string[] = [];
   lines.push(`# ${inst.title}`);
-  lines.push(`# Generert fra ${location.origin}${location.pathname} (datastand: ${generated ? isoDate(generated) : 'ukjent'})`);
+  lines.push(
+    `# Generert fra ${location.origin}${location.pathname} (datastand: ${generated ? isoDate(generated) : 'ukjent'})`,
+  );
   for (const s of sources) {
     lines.push(`# Kilde: ${s.name} – ${s.provider} – ${s.homepage}`);
     lines.push(`# Lisens: ${s.license}`);
@@ -245,7 +247,11 @@ export async function mountChart(host: HTMLElement, factory: ChartFactory): Prom
         meta.append(a);
         if (i < srcs.length - 1) meta.append(document.createTextNode(', '));
       });
-      const newest = srcs.map((s) => s.fetched_at).filter(Boolean).sort().pop();
+      const newest = srcs
+        .map((s) => s.fetched_at)
+        .filter(Boolean)
+        .sort()
+        .pop();
       if (newest) parts.push(`${ui.chart.updated}: ${isoDate(newest)}`);
       const lp = srcs.map((s) => s.last_point).filter(Boolean)[0];
       if (lp) parts.push(`${ui.chart.last_point}: ${lp}`);

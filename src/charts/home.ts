@@ -8,7 +8,11 @@ import { dateTick, parseDay } from './common';
 const nz = (v: number | null) => (v === null ? null : v);
 
 export async function cycle25(): Promise<ChartInstance> {
-  const [m, f, c] = await Promise.all([getJSON('ssn_monthly.json'), getJSON('cycle25_forecast.json'), getJSON('cycles.json')]);
+  const [m, f, c] = await Promise.all([
+    getJSON('ssn_monthly.json'),
+    getJSON('cycle25_forecast.json'),
+    getJSON('cycles.json'),
+  ]);
   const cy = last(c.cycles as any[]);
   const t0 = Math.floor(cy.start_t) - 1;
   const idx: number[] = m.t.map((_: number, i: number) => i).filter((i: number) => m.t[i] >= t0);
@@ -27,7 +31,8 @@ export async function cycle25(): Promise<ChartInstance> {
   const fl = f.ssn.length - 1;
   return {
     title: 'Solsyklus 25: observert og NOAAs prognose',
-    subtitle: 'Månedlig solflekktall (SILSO V2.0), 13-måneders glattet verdi og prognose fra NOAA SWPC med usikkerhetsbånd.',
+    subtitle:
+      'Månedlig solflekktall (SILSO V2.0), 13-måneders glattet verdi og prognose fra NOAA SWPC med usikkerhetsbånd.',
     alt: `Linjediagram over månedlig solflekktall siden ${decYear(sorted[0][0])}. Glattet verdi er ${num(m.smoothed[lastSm], 1)} i ${decYear(m.t[lastSm])}; siste månedsverdi er ${num(m.ssn[lastObs], 0)} i ${decYear(m.t[lastObs])}. NOAAs prognose går mot ${num(f.ssn[fl], 0)} i ${decYear(f.t[fl])} (bånd ${num(f.ssn_low[fl], 0)}–${num(f.ssn_high[fl], 0)}).`,
     sources: ['silso_monthly', 'swpc_cycle'],
     columns: [
@@ -51,11 +56,30 @@ export async function cycle25(): Promise<ChartInstance> {
         pal,
         yLabel: 'Solflekktall',
         series: [
-          { name: 'Månedlig', color: pal.s5, kind: 'dot', data: sorted.filter(([, r]) => r[0] !== null).map(([t, r]) => ({ x: t, y: r[0]! })) },
-          { name: 'Glattet', color: pal.s1, width: 2.4, data: sorted.filter(([, r]) => r[1] !== null).map(([t, r]) => ({ x: t, y: r[1]! })) },
-          { name: 'Prognose', color: pal.s2, dash: '6 4', width: 2.2, data: sorted.filter(([, r]) => r[2] !== null).map(([t, r]) => ({ x: t, y: r[2]! })) },
+          {
+            name: 'Månedlig',
+            color: pal.s5,
+            kind: 'dot',
+            data: sorted.filter(([, r]) => r[0] !== null).map(([t, r]) => ({ x: t, y: r[0]! })),
+          },
+          {
+            name: 'Glattet',
+            color: pal.s1,
+            width: 2.4,
+            data: sorted.filter(([, r]) => r[1] !== null).map(([t, r]) => ({ x: t, y: r[1]! })),
+          },
+          {
+            name: 'Prognose',
+            color: pal.s2,
+            dash: '6 4',
+            width: 2.2,
+            data: sorted.filter(([, r]) => r[2] !== null).map(([t, r]) => ({ x: t, y: r[2]! })),
+          },
         ],
-        band: { color: pal.s2, data: sorted.filter(([, r]) => r[3] !== null).map(([t, r]) => ({ x: t, lo: r[3]!, hi: r[4]! })) },
+        band: {
+          color: pal.s2,
+          data: sorted.filter(([, r]) => r[3] !== null).map(([t, r]) => ({ x: t, lo: r[3]!, hi: r[4]! })),
+        },
         yDomain: [0, 260],
       }),
   };
@@ -91,17 +115,33 @@ export async function ssnDaily(): Promise<ChartInstance> {
       { label: 'EISN (foreløpig)', color: 'var(--s2)' },
     ],
     render: ({ width, pal }) => {
-      const mk = (idx: 0 | 1) => rows.filter(([, r]) => r[idx] !== null).map(([s, r]) => ({ x: parseDay(s), y: r[idx]! }));
+      const mk = (idx: 0 | 1) =>
+        rows.filter(([, r]) => r[idx] !== null).map(([s, r]) => ({ x: parseDay(s), y: r[idx]! }));
       return Plot.plot({
         ...baseOpts(width, pal, 260),
-        x: { type: 'utc', label: null, ticks: Math.max(3, Math.floor(width / 110)), tickFormat: (dt: Date) => `${dt.toLocaleDateString('nb-NO', { month: 'short', year: '2-digit', timeZone: 'UTC' })}` },
+        x: {
+          type: 'utc',
+          label: null,
+          ticks: Math.max(3, Math.floor(width / 110)),
+          tickFormat: (dt: Date) =>
+            `${dt.toLocaleDateString('nb-NO', { month: 'short', year: '2-digit', timeZone: 'UTC' })}`,
+        },
         y: { label: 'Solflekktall', grid: false, labelAnchor: 'top' },
         marks: [
           Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }),
           Plot.ruleY([0], { stroke: pal.muted }),
           Plot.dot(mk(0), { x: 'x', y: 'y', fill: pal.s1, r: 1.8, fillOpacity: 0.75 }),
           Plot.line(mk(1), { x: 'x', y: 'y', stroke: pal.s2, strokeWidth: 1.5 }),
-          Plot.tip(mk(1), Plot.pointerX({ x: 'x', y: 'y', fill: pal.bg, stroke: pal.border, title: (p: { x: Date; y: number }) => `${isoDate(p.x.toISOString())}\nEISN ${p.y}` })),
+          Plot.tip(
+            mk(1),
+            Plot.pointerX({
+              x: 'x',
+              y: 'y',
+              fill: pal.bg,
+              stroke: pal.border,
+              title: (p: { x: Date; y: number }) => `${isoDate(p.x.toISOString())}\nEISN ${p.y}`,
+            }),
+          ),
         ],
       });
     },
@@ -111,7 +151,9 @@ export async function ssnDaily(): Promise<ChartInstance> {
 export async function f107Recent(): Promise<ChartInstance> {
   const d = await getJSON('recent30.json');
   const n = d.date.length;
-  const mean = d.f107.filter((v: number | null) => v !== null).reduce((a: number, b: number) => a + b, 0) / d.f107.filter((v: number | null) => v !== null).length;
+  const mean =
+    d.f107.filter((v: number | null) => v !== null).reduce((a: number, b: number) => a + b, 0) /
+    d.f107.filter((v: number | null) => v !== null).length;
   return {
     title: 'Radiofluks F10.7, siste 30 dager',
     subtitle: 'Solens radiostråling ved 10,7 cm (2800 MHz) i solar flux units (sfu), daglig middagsmåling.',
@@ -128,7 +170,12 @@ export async function f107Recent(): Promise<ChartInstance> {
       Plot.plot({
         ...baseOpts(width, pal, 240),
         x: { type: 'utc', label: null, ticks: Math.max(3, Math.floor(width / 100)), tickFormat: dateTick },
-        y: { label: 'sfu', grid: false, labelAnchor: 'top', domain: [60, Math.max(160, ...d.f107.filter((v: number | null) => v !== null))] },
+        y: {
+          label: 'sfu',
+          grid: false,
+          labelAnchor: 'top',
+          domain: [60, Math.max(160, ...d.f107.filter((v: number | null) => v !== null))],
+        },
         marks: [
           Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }),
           Plot.line(
@@ -141,7 +188,13 @@ export async function f107Recent(): Promise<ChartInstance> {
           ),
           Plot.tip(
             d.date.map((s: string, i: number) => ({ x: parseDay(s), y: d.f107[i] })),
-            Plot.pointerX({ x: 'x', y: 'y', fill: pal.bg, stroke: pal.border, title: (p: { x: Date; y: number }) => `${isoDate(p.x.toISOString())}\n${p.y} sfu` }),
+            Plot.pointerX({
+              x: 'x',
+              y: 'y',
+              fill: pal.bg,
+              stroke: pal.border,
+              title: (p: { x: Date; y: number }) => `${isoDate(p.x.toISOString())}\n${p.y} sfu`,
+            }),
           ),
         ],
       }),
@@ -154,7 +207,8 @@ export async function kpRecent(): Promise<ChartInstance> {
   const mx = Math.max(...d.kp);
   return {
     title: 'Geomagnetisk aktivitet (Kp), siste 30 dager',
-    subtitle: 'Planetarisk Kp-indeks hver tredje time (0–9). Kp ≥ 5 tilsvarer geomagnetisk storm (NOAA G1 eller sterkere).',
+    subtitle:
+      'Planetarisk Kp-indeks hver tredje time (0–9). Kp ≥ 5 tilsvarer geomagnetisk storm (NOAA G1 eller sterkere).',
     alt: `Kp-indeks hver tredje time de siste ${num(n / 8, 0)} dagene. Høyeste verdi er ${num(mx, 1)}; siste verdi er ${num(d.kp[n - 1], 1)} (${d.time[n - 1].replace('T', ' ')} UTC). Kilde: ${d.origin}.`,
     sources: ['kp_recent'],
     columns: [
@@ -175,9 +229,24 @@ export async function kpRecent(): Promise<ChartInstance> {
         y: { label: 'Kp', domain: [0, 9], grid: false, labelAnchor: 'top', ticks: 9 },
         marks: [
           Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }),
-          Plot.rectY(data, { x1: (p: { x: Date }) => new Date(p.x.getTime() - 3600e3 * 1.3), x2: (p: { x: Date }) => new Date(p.x.getTime() + 3600e3 * 1.3), y: 'y', fill: (p: { y: number }) => (p.y >= 5 ? pal.s1 : pal.s2) }),
+          Plot.rectY(data, {
+            x1: (p: { x: Date }) => new Date(p.x.getTime() - 3600e3 * 1.3),
+            x2: (p: { x: Date }) => new Date(p.x.getTime() + 3600e3 * 1.3),
+            y: 'y',
+            fill: (p: { y: number }) => (p.y >= 5 ? pal.s1 : pal.s2),
+          }),
           Plot.ruleY([5], { stroke: pal.muted, strokeDasharray: '4 3' }),
-          Plot.tip(data, Plot.pointerX({ x: 'x', y: 'y', fill: pal.bg, stroke: pal.border, title: (p: { x: Date; y: number }) => `${p.x.toISOString().slice(0, 16).replace('T', ' ')} UTC\nKp ${p.y}` })),
+          Plot.tip(
+            data,
+            Plot.pointerX({
+              x: 'x',
+              y: 'y',
+              fill: pal.bg,
+              stroke: pal.border,
+              title: (p: { x: Date; y: number }) =>
+                `${p.x.toISOString().slice(0, 16).replace('T', ' ')} UTC\nKp ${p.y}`,
+            }),
+          ),
         ],
       });
     },
@@ -201,15 +270,24 @@ export async function initDashboard(root: HTMLElement): Promise<void> {
   // Dagens solflekktall
   const ie = daily.eisn.length - 1;
   set('ssn-value', String(daily.eisn[ie]));
-  const il = daily.ssn.map((v: number | null, i: number) => (v !== null ? i : -1)).filter((i: number) => i >= 0).pop();
+  const il = daily.ssn
+    .map((v: number | null, i: number) => (v !== null ? i : -1))
+    .filter((i: number) => i >= 0)
+    .pop();
   set(
     'ssn-note',
     `EISN (foreløpig estimat) for ${isoDate(daily.eisn_date[ie])}. Siste endelige verdi (SILSO V2.0): ${daily.ssn[il]} for ${isoDate(daily.date[il])}.`,
   );
   // Syklus 25
   const c25 = last(cyc.cycles as any[]);
-  const lastSm = mon.smoothed.map((v: number | null, i: number) => (v !== null ? i : -1)).filter((i: number) => i >= 0).pop();
-  const lastMon = mon.ssn.map((v: number | null, i: number) => (v !== null ? i : -1)).filter((i: number) => i >= 0).pop();
+  const lastSm = mon.smoothed
+    .map((v: number | null, i: number) => (v !== null ? i : -1))
+    .filter((i: number) => i >= 0)
+    .pop();
+  const lastMon = mon.ssn
+    .map((v: number | null, i: number) => (v !== null ? i : -1))
+    .filter((i: number) => i >= 0)
+    .pop();
   set('cycle-value', num(c25.max_smoothed, 0));
   set(
     'cycle-note',
@@ -219,12 +297,18 @@ export async function initDashboard(root: HTMLElement): Promise<void> {
   const ir = recent.f107.length - 1;
   const vals = recent.f107.filter((v: number | null) => v !== null) as number[];
   set('f107-value', `${recent.f107[ir]} sfu`);
-  set('f107-note', `Målt ${isoDate(recent.date[ir])}. Gjennomsnitt siste ${vals.length} dager: ${num(vals.reduce((a, b) => a + b, 0) / vals.length, 0)} sfu.`);
+  set(
+    'f107-note',
+    `Målt ${isoDate(recent.date[ir])}. Gjennomsnitt siste ${vals.length} dager: ${num(vals.reduce((a, b) => a + b, 0) / vals.length, 0)} sfu.`,
+  );
   // Kp
   const nk = kp.kp.length;
   const last24 = kp.kp.slice(-8) as number[];
   set('kp-value', num(kp.kp[nk - 1], 1));
-  set('kp-note', `Siste 24 timer: høyeste Kp ${num(Math.max(...last24), 1)}. Siste 30 dager: høyeste ${num(Math.max(...kp.kp), 1)} (${kp.time[kp.kp.indexOf(Math.max(...kp.kp))].slice(0, 10)}).`);
+  set(
+    'kp-note',
+    `Siste 24 timer: høyeste Kp ${num(Math.max(...last24), 1)}. Siste 30 dager: høyeste ${num(Math.max(...kp.kp), 1)} (${kp.time[kp.kp.indexOf(Math.max(...kp.kp))].slice(0, 10)}).`,
+  );
   // Ferskhet per dataserie
   const labels: Record<string, string> = {
     silso_daily: 'Daglig solflekktall (SILSO)',

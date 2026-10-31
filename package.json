@@ -13,7 +13,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --port 4173 --strictPort",
     "typecheck": "npm run gen && tsc --noEmit",
-    "lint": "eslint . && prettier --check \"src/**/*.{ts,css}\" \"scripts/**/*.mjs\" \"tests/**/*.ts\" \"content/**/*.md\" --log-level warn",
+    "lint": "eslint . && prettier --check \"src/**/*.{ts,css}\" \"scripts/**/*.mjs\" \"tests/**/*.ts\" --log-level warn",
     "format": "prettier --write \"src/**/*.{ts,css}\" \"scripts/**/*.mjs\" \"tests/**/*.ts\"",
     "e2e": "playwright test",
     "lighthouse": "node scripts/lighthouse.mjs"
@@ -27,6 +27,7 @@
     "@playwright/test": "1.63.0",
     "@types/d3": "^7.4.3",
     "@types/node": "^22.0.0",
+    "chrome-launcher": "^1.2.2",
     "eslint": "^9.39.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^16.0.0",

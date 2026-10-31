@@ -1,0 +1,21 @@
+name: Oppdater daglig
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  update:
+    uses: ./.github/workflows/_update.yml
+    with:
+      group: daily
+    permissions:
+      contents: write
+      pages: write
+      id-token: write

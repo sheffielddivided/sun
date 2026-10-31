@@ -39,19 +39,33 @@ export function barsByCategory(opts: {
 }) {
   const { pal } = opts;
   const series = Object.keys(opts.colors);
-  const marks: Plot.Markish[] = [Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }), Plot.ruleY([0], { stroke: pal.muted })];
+  const marks: Plot.Markish[] = [
+    Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }),
+    Plot.ruleY([0], { stroke: pal.muted }),
+  ];
   marks.push(
     Plot.barY(opts.data, {
       x: 'series',
       y: 'v',
       fx: 'cat',
       fill: 'series',
-      title: (d: { cat: string; series: string; v: number }) => `${d.cat} – ${d.series}: ${d.v.toLocaleString('nb-NO', { maximumFractionDigits: 3 })}`,
+      title: (d: { cat: string; series: string; v: number }) =>
+        `${d.cat} – ${d.series}: ${d.v.toLocaleString('nb-NO', { maximumFractionDigits: 3 })}`,
     }),
   );
   if (opts.hline) {
     marks.push(Plot.ruleY([opts.hline.y], { stroke: pal.muted, strokeDasharray: '4 3' }));
-    marks.push(Plot.text([{ y: opts.hline.y, t: opts.hline.label }], { y: 'y', text: 't', frameAnchor: 'right', textAnchor: 'end', dy: -6, fill: pal.muted, fontSize: 11 }));
+    marks.push(
+      Plot.text([{ y: opts.hline.y, t: opts.hline.label }], {
+        y: 'y',
+        text: 't',
+        frameAnchor: 'right',
+        textAnchor: 'end',
+        dy: -6,
+        fill: pal.muted,
+        fontSize: 11,
+      }),
+    );
   }
   return Plot.plot({
     ...baseOpts(opts.width, pal, opts.height),
@@ -75,14 +89,31 @@ export interface LagRow {
   p_holm: number;
   n: number;
 }
-export function lagPlot(opts: { width: number; pal: Palette; sets: { name: string; color: string; rows: LagRow[] }[]; height?: number; xLabel?: string }) {
+export function lagPlot(opts: {
+  width: number;
+  pal: Palette;
+  sets: { name: string; color: string; rows: LagRow[] }[];
+  height?: number;
+  xLabel?: string;
+}) {
   const { pal } = opts;
-  const marks: Plot.Markish[] = [Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }), Plot.ruleY([0], { stroke: pal.muted })];
+  const marks: Plot.Markish[] = [
+    Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }),
+    Plot.ruleY([0], { stroke: pal.muted }),
+  ];
   const nSets = opts.sets.length;
   opts.sets.forEach((s, i) => {
     const off = (i - (nSets - 1) / 2) * 0.16;
     const d = s.rows.map((r) => ({ ...r, x: r.lag + off, sig: r.p_holm < 0.05 }));
-    marks.push(Plot.ruleX(d, { x: 'x', y1: (r: LagRow) => r.ci_lo ?? r.r, y2: (r: LagRow) => r.ci_hi ?? r.r, stroke: s.color, strokeWidth: 1.6 }));
+    marks.push(
+      Plot.ruleX(d, {
+        x: 'x',
+        y1: (r: LagRow) => r.ci_lo ?? r.r,
+        y2: (r: LagRow) => r.ci_hi ?? r.r,
+        stroke: s.color,
+        strokeWidth: 1.6,
+      }),
+    );
     marks.push(
       Plot.dot(d, {
         x: 'x',
@@ -98,7 +129,12 @@ export function lagPlot(opts: { width: number; pal: Palette; sets: { name: strin
   });
   return Plot.plot({
     ...baseOpts(opts.width, pal, opts.height ?? 300),
-    x: { label: opts.xLabel ?? 'Forsinkelse (år)', ticks: 12, tickFormat: (d: number) => String(d), labelAnchor: 'right' },
+    x: {
+      label: opts.xLabel ?? 'Forsinkelse (år)',
+      ticks: 12,
+      tickFormat: (d: number) => String(d),
+      labelAnchor: 'right',
+    },
     y: { label: 'Korrelasjon (r)', domain: [-1, 1], labelAnchor: 'top' },
     marks,
   });
@@ -116,4 +152,5 @@ export function lagColumns() {
     { key: 'p_holm', label: 'p (Holm)', digits: 4 },
   ];
 }
-export const lagRows = (rows: LagRow[], label?: string) => rows.map((r) => [...(label ? [label] : []), r.lag, r.r, r.ci_lo, r.ci_hi, r.n, r.neff, r.p_surrogate, r.p_holm]);
+export const lagRows = (rows: LagRow[], label?: string) =>
+  rows.map((r) => [...(label ? [label] : []), r.lag, r.r, r.ci_lo, r.ci_hi, r.n, r.neff, r.p_surrogate, r.p_holm]);

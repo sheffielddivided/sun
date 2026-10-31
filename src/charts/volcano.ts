@@ -13,7 +13,8 @@ export async function volcanoTimeline(): Promise<ChartInstance> {
   const rows = idx.map((i) => [e.t[i], e.year[i], e.volcano[i], e.vei[i], e.precise[i] ? 'ja' : 'nei']);
   return {
     title: 'Store vulkanutbrudd (VEI ≥ 4) og solflekktall',
-    subtitle: 'Hvert punkt er ett bekreftet utbrudd i Smithsonian GVP; størrelsen viser VEI. Nederst: glattet solflekktall (fra 1749).',
+    subtitle:
+      'Hvert punkt er ett bekreftet utbrudd i Smithsonian GVP; størrelsen viser VEI. Nederst: glattet solflekktall (fra 1749).',
     alt: `Tidslinje 1500–2025 over ${idx.length} bekreftede utbrudd med VEI ≥ 4 og solflekktall. Antall registrerte utbrudd per tiår er lavere før 1850 enn senere, som tyder på ufullstendig registrering.`,
     sources: ['gvp_eruptions', 'silso_monthly'],
     columns: [
@@ -34,7 +35,12 @@ export async function volcanoTimeline(): Promise<ChartInstance> {
     ],
     render: ({ width, range, pal }) => {
       const r: [number, number] = range ?? [1500, 2026];
-      const d = idx.map((i) => ({ x: e.t[i] as number, vei: e.vei[i] as number, v: e.volcano[i] as string, y: e.year[i] as number }));
+      const d = idx.map((i) => ({
+        x: e.t[i] as number,
+        vei: e.vei[i] as number,
+        v: e.volcano[i] as string,
+        y: e.year[i] as number,
+      }));
       const top = Plot.plot({
         ...baseOpts(width, pal, 200),
         x: { domain: r, label: null, tickFormat: (q: number) => String(q), ticks: Math.max(3, Math.floor(width / 90)) },
@@ -44,11 +50,27 @@ export async function volcanoTimeline(): Promise<ChartInstance> {
           Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }),
           Plot.dot(
             d.filter((q) => q.x >= r[0] && q.x <= r[1]),
-            { x: 'x', y: 'vei', r: 'vei', fill: (q: { vei: number }) => (q.vei >= 5 ? pal.s1 : pal.s2), fillOpacity: 0.65, stroke: pal.bg, title: (q: { v: string; y: number; vei: number }) => `${q.v} ${q.y}, VEI ${q.vei}` },
+            {
+              x: 'x',
+              y: 'vei',
+              r: 'vei',
+              fill: (q: { vei: number }) => (q.vei >= 5 ? pal.s1 : pal.s2),
+              fillOpacity: 0.65,
+              stroke: pal.bg,
+              title: (q: { v: string; y: number; vei: number }) => `${q.v} ${q.y}, VEI ${q.vei}`,
+            },
           ),
         ],
       });
-      const bottom = timeSeries({ width, pal, range: r, height: 170, yLabel: 'Solflekktall', series: [{ name: 'Glattet', color: pal.s4, width: 1.8, data: pts(m.t, m.smoothed) }], yDomain: [0, 300] });
+      const bottom = timeSeries({
+        width,
+        pal,
+        range: r,
+        height: 170,
+        yLabel: 'Solflekktall',
+        series: [{ name: 'Glattet', color: pal.s4, width: 1.8, data: pts(m.t, m.smoothed) }],
+        yDomain: [0, 300],
+      });
       return stack(top, bottom);
     },
   };
@@ -64,7 +86,8 @@ export async function volcanoReporting(): Promise<ChartInstance> {
   ]);
   return {
     title: 'Antall registrerte utbrudd per 50 år: ufullstendig i eldre tid',
-    subtitle: 'Bekreftede utbrudd i GVP. Økningen mot nåtid speiler bedre registrering, ikke nødvendigvis flere utbrudd.',
+    subtitle:
+      'Bekreftede utbrudd i GVP. Økningen mot nåtid speiler bedre registrering, ikke nødvendigvis flere utbrudd.',
     alt: `Antall utbrudd med VEI ≥ 4 per 50-årsperiode stiger fra ${r.vei4[0]} (1500–1549) til ${Math.max(...r.vei4)} (maks) mens antallet VEI ≥ 5 er mer stabilt (${Math.min(...r.vei5.slice(1))}–${Math.max(...r.vei5)}).`,
     sources: ['gvp_eruptions'],
     columns: [
@@ -80,7 +103,15 @@ export async function volcanoReporting(): Promise<ChartInstance> {
       { label: 'VEI ≥ 4', color: 'var(--s2)' },
       { label: 'VEI ≥ 5', color: 'var(--s1)' },
     ],
-    render: ({ width, pal }) => barsByCategory({ width, pal, data, colors: { 'VEI ≥ 4': pal.s2, 'VEI ≥ 5': pal.s1 }, yLabel: 'Utbrudd per 50 år', height: 280 }),
+    render: ({ width, pal }) =>
+      barsByCategory({
+        width,
+        pal,
+        data,
+        colors: { 'VEI ≥ 4': pal.s2, 'VEI ≥ 5': pal.s1 },
+        yLabel: 'Utbrudd per 50 år',
+        height: 280,
+      }),
   };
 }
 
@@ -97,7 +128,8 @@ export async function volcanoPhase(): Promise<ChartInstance> {
   void mk;
   return {
     title: 'Utbrudd fordelt på fase i solsyklusen',
-    subtitle: 'Antall observerte utbrudd per kvartal av solsyklusen (0 % = minimum) mot antallet som ville forventes hvis utbruddene var jevnt fordelt i tid.',
+    subtitle:
+      'Antall observerte utbrudd per kvartal av solsyklusen (0 % = minimum) mot antallet som ville forventes hvis utbruddene var jevnt fordelt i tid.',
     alt: `Observerte og forventede utbrudd per fase i solsyklusen. VEI ≥ 4, 1850–2019 (${A.n_events} utbrudd): observert ${A.phase.observed.join(', ')} mot forventet ${A.phase.expected.map((v: number) => num(v, 1)).join(', ')} (p = ${pval(A.phase.p)}). VEI ≥ 5, 1755–2019 (${B.n_events} utbrudd): observert ${B.phase.observed.join(', ')} (p = ${pval(B.phase.p)}).`,
     sources: ['gvp_eruptions', 'silso_monthly'],
     columns: [
@@ -123,10 +155,20 @@ export async function volcanoPhase(): Promise<ChartInstance> {
           marginBottom: 56,
           title: undefined,
           x: { axis: null, domain: ['Observert', 'Forventet'] },
-          fx: { label: `${s.label} (${s.n_events} utbrudd)`, domain: labs, tickSize: 0, padding: 0.15, labelAnchor: 'center' },
+          fx: {
+            label: `${s.label} (${s.n_events} utbrudd)`,
+            domain: labs,
+            tickSize: 0,
+            padding: 0.15,
+            labelAnchor: 'center',
+          },
           y: { label: 'Utbrudd', grid: false, labelAnchor: 'top' },
           color: { domain: ['Observert', 'Forventet'], range: [pal.s1, pal.s5] },
-          marks: [Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }), Plot.barY(d, { x: 'k', y: 'v', fx: 'ph', fill: 'k' }), Plot.ruleY([0], { stroke: pal.muted })],
+          marks: [
+            Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }),
+            Plot.barY(d, { x: 'k', y: 'v', fx: 'ph', fill: 'k' }),
+            Plot.ruleY([0], { stroke: pal.muted }),
+          ],
         });
       };
       return stack(panel(A), panel(B));
@@ -140,7 +182,8 @@ export async function volcanoSea(): Promise<ChartInstance> {
     B = sc(a, 'B');
   return {
     title: 'Superposed epoch: solflekktall rundt utbruddene',
-    subtitle: 'Gjennomsnittlig standardisert solflekktall (z) i år −5 til +5 rundt utbruddsåret, mot båndet (95 %) som tilfeldig plasserte utbruddsrekker gir.',
+    subtitle:
+      'Gjennomsnittlig standardisert solflekktall (z) i år −5 til +5 rundt utbruddsåret, mot båndet (95 %) som tilfeldig plasserte utbruddsrekker gir.',
     alt: `Gjennomsnittlig solflekktall rundt utbruddene mot 95 %-bånd fra ${num(a.n_shifts, 0)} sirkulært forskjøvede utbruddsrekker. VEI ≥ 4 (1850–2019): største avvik ${num(A.sea.max_abs_z, 1)} standardavvik, global p = ${pval(A.sea.p_global)}. VEI ≥ 5: største avvik ${num(B.sea.max_abs_z, 1)}, global p = ${pval(B.sea.p_global)}.`,
     sources: ['gvp_eruptions', 'silso_monthly'],
     columns: [
@@ -151,7 +194,16 @@ export async function volcanoSea(): Promise<ChartInstance> {
       { key: 'band_lo', label: 'Nullbånd 2,5 %', digits: 3 },
       { key: 'band_hi', label: 'Nullbånd 97,5 %', digits: 3 },
     ],
-    rows: [A, B].flatMap((s) => s.sea.lags.map((l: number, i: number) => [s.label, l, s.sea.composite_z[i], s.sea.null_mean[i], s.sea.band_lo[i], s.sea.band_hi[i]])),
+    rows: [A, B].flatMap((s) =>
+      s.sea.lags.map((l: number, i: number) => [
+        s.label,
+        l,
+        s.sea.composite_z[i],
+        s.sea.null_mean[i],
+        s.sea.band_lo[i],
+        s.sea.band_hi[i],
+      ]),
+    ),
     csvName: 'vulkan_superposed_epoch',
     legend: [
       { label: 'Observert', color: 'var(--s1)' },
@@ -159,10 +211,20 @@ export async function volcanoSea(): Promise<ChartInstance> {
     ],
     render: ({ width, pal }) => {
       const panel = (s: any) => {
-        const d = s.sea.lags.map((l: number, i: number) => ({ x: l, y: s.sea.composite_z[i], lo: s.sea.band_lo[i], hi: s.sea.band_hi[i] }));
+        const d = s.sea.lags.map((l: number, i: number) => ({
+          x: l,
+          y: s.sea.composite_z[i],
+          lo: s.sea.band_lo[i],
+          hi: s.sea.band_hi[i],
+        }));
         return Plot.plot({
           ...baseOpts(width, pal, 230),
-          x: { label: 'År relativt utbruddsåret', ticks: 11, tickFormat: (q: number) => String(q), labelAnchor: 'right' },
+          x: {
+            label: 'År relativt utbruddsåret',
+            ticks: 11,
+            tickFormat: (q: number) => String(q),
+            labelAnchor: 'right',
+          },
           y: { label: `z · ${s.label}`, grid: false, labelAnchor: 'top' },
           marks: [
             Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }),
@@ -170,7 +232,13 @@ export async function volcanoSea(): Promise<ChartInstance> {
             Plot.ruleY([0], { stroke: pal.muted }),
             Plot.ruleX([0], { stroke: pal.muted, strokeDasharray: '4 3' }),
             Plot.line(d, { x: 'x', y: 'y', stroke: pal.s1, strokeWidth: 2.4 }),
-            Plot.dot(d, { x: 'x', y: 'y', fill: pal.s1, r: 3.5, title: (q: { x: number; y: number }) => `år ${q.x}: z = ${q.y.toFixed(2)}` }),
+            Plot.dot(d, {
+              x: 'x',
+              y: 'y',
+              fill: pal.s1,
+              r: 3.5,
+              title: (q: { x: number; y: number }) => `år ${q.x}: z = ${q.y.toFixed(2)}`,
+            }),
           ],
         });
       };
@@ -198,7 +266,17 @@ export async function volcanoScenarios(): Promise<ChartInstance> {
       { key: 'p_holm_min', label: 'Holm (primær, minste)', digits: 4 },
       { key: 'share_high', label: 'Andel i høy aktivitet', digits: 3 },
     ],
-    rows: s.map((x) => [x.id, x.label, x.primary ? 'ja' : 'nei', x.n_events, x.phase.p, x.high_low.p, x.sea.p_global, x.primary ? Math.min(x.phase.p_holm, x.high_low.p_holm, x.sea.p_holm) : null, x.high_low.observed_share_high]),
+    rows: s.map((x) => [
+      x.id,
+      x.label,
+      x.primary ? 'ja' : 'nei',
+      x.n_events,
+      x.phase.p,
+      x.high_low.p,
+      x.sea.p_global,
+      x.primary ? Math.min(x.phase.p_holm, x.high_low.p_holm, x.sea.p_holm) : null,
+      x.high_low.observed_share_high,
+    ]),
     tableOpen: true,
     csvName: 'vulkan_alle_scenarier',
   };

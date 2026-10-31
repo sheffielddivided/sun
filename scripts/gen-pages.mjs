@@ -37,14 +37,34 @@ function lookup(pathStr) {
   if (cur === null || cur === undefined) throw new Error(`Verdibinding gir null: {{${pathStr}}}`);
   return cur;
 }
-const MONTHS = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
+const MONTHS = [
+  'januar',
+  'februar',
+  'mars',
+  'april',
+  'mai',
+  'juni',
+  'juli',
+  'august',
+  'september',
+  'oktober',
+  'november',
+  'desember',
+];
 function fmt(v, f = 'raw') {
   const nf = (d, signed = false) =>
-    Number(v).toLocaleString('nb-NO', { minimumFractionDigits: d, maximumFractionDigits: d, signDisplay: signed ? 'exceptZero' : 'auto' });
+    Number(v).toLocaleString('nb-NO', {
+      minimumFractionDigits: d,
+      maximumFractionDigits: d,
+      signDisplay: signed ? 'exceptZero' : 'auto',
+    });
   let m;
   if ((m = /^n(\d)$/.exec(f))) return nf(Number(m[1]));
   if ((m = /^s(\d)$/.exec(f))) return nf(Number(m[1]), true);
-  if ((m = /^pct(\d)$/.exec(f))) return Number(v * 100).toLocaleString('nb-NO', { minimumFractionDigits: +m[1], maximumFractionDigits: +m[1] }) + ' %';
+  if ((m = /^pct(\d)$/.exec(f)))
+    return (
+      Number(v * 100).toLocaleString('nb-NO', { minimumFractionDigits: +m[1], maximumFractionDigits: +m[1] }) + ' %'
+    );
   switch (f) {
     case 'p': {
       const x = Number(v);
@@ -86,9 +106,18 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const abs = (href) => (href.startsWith('/') && !href.startsWith('//') ? BASE + href.slice(1) : href);
 
 const EVIDENCE = {
-  a: { cls: 'a', icon: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke="var(--evidence-icon-fg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
-  b: { cls: 'b', icon: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>' },
-  c: { cls: 'c', icon: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8.2 8.2l7.6 7.6M15.8 8.2l-7.6 7.6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>' },
+  a: {
+    cls: 'a',
+    icon: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke="var(--evidence-icon-fg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  },
+  b: {
+    cls: 'b',
+    icon: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>',
+  },
+  c: {
+    cls: 'c',
+    icon: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8.2 8.2l7.6 7.6M15.8 8.2l-7.6 7.6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
+  },
 };
 function evidenceBadge(level, withText = true) {
   const e = EVIDENCE[level];
@@ -103,7 +132,12 @@ function renderSources() {
     `<div class="sources">` +
     items
       .map((s) => {
-        const status = s.status === 'ok' ? ui.sources.status_ok : s.status === 'stale' ? ui.sources.status_stale : ui.sources.status_failed;
+        const status =
+          s.status === 'ok'
+            ? ui.sources.status_ok
+            : s.status === 'stale'
+              ? ui.sources.status_stale
+              : ui.sources.status_failed;
         const urls = s.urls.map((u) => `<li><a href="${esc(u)}" rel="noopener">${esc(u)}</a></li>`).join('');
         return `<article class="source-card" id="kilde-${esc(s.id)}">
 <h3>${esc(s.name)}</h3>
@@ -125,7 +159,9 @@ ${s.error ? `<dt>${esc(ui.sources.error)}</dt><dd>${esc(s.error)}</dd>` : ''}
 }
 
 function renderTopics(pages) {
-  const subs = pages.filter((p) => p.meta.parent === 'sol-og-jord').sort((a, b) => Number(a.meta.order) - Number(b.meta.order));
+  const subs = pages
+    .filter((p) => p.meta.parent === 'sol-og-jord')
+    .sort((a, b) => Number(a.meta.order) - Number(b.meta.order));
   return (
     `<ul class="topics">` +
     subs
@@ -144,12 +180,18 @@ function evalCondition(expr) {
   const v = lookup(m[1]);
   const rhs = m[3] === 'true' ? true : m[3] === 'false' ? false : Number(m[3]);
   switch (m[2]) {
-    case '<': return v < rhs;
-    case '>': return v > rhs;
-    case '<=': return v <= rhs;
-    case '>=': return v >= rhs;
-    case '==': return v === rhs;
-    default: return v !== rhs;
+    case '<':
+      return v < rhs;
+    case '>':
+      return v > rhs;
+    case '<=':
+      return v <= rhs;
+    case '>=':
+      return v >= rhs;
+    case '==':
+      return v === rhs;
+    default:
+      return v !== rhs;
   }
 }
 
@@ -170,9 +212,13 @@ function preprocess(md, pages) {
       }
       if (evalCondition(m[1])) out.push(preprocess(inner.join('\n'), pages));
     } else if ((m = /^:::chart\s+([\w-]+)\s*$/.exec(line))) {
-      out.push(`\n<figure class="chart" data-chart="${m[1]}" aria-busy="true"><p class="chart-loading">${esc(ui.chart.loading)}</p></figure>\n`);
+      out.push(
+        `\n<figure class="chart" data-chart="${m[1]}" aria-busy="true"><p class="chart-loading">${esc(ui.chart.loading)}</p></figure>\n`,
+      );
     } else if ((m = /^:::svg\s+([\w-]+)\s*\|\s*(.+)$/.exec(line))) {
-      const svg = fs.readFileSync(path.join(ROOT, 'content', 'svg', `${m[1]}.svg`), 'utf8').replace(/<\?xml[^>]*\?>/, '');
+      const svg = fs
+        .readFileSync(path.join(ROOT, 'content', 'svg', `${m[1]}.svg`), 'utf8')
+        .replace(/<\?xml[^>]*\?>/, '');
       out.push(`\n<figure class="illustration">${svg}<figcaption>${esc(m[2])}</figcaption></figure>\n`);
     } else if ((m = /^:::evidence\s+([abc])\s*(.*)$/.exec(line))) {
       const inner = [];
@@ -185,13 +231,17 @@ function preprocess(md, pages) {
     } else if ((m = /^:::box\s*(.*)$/.exec(line))) {
       const inner = [];
       for (i++; i < lines.length && lines[i] !== ':::'; i++) inner.push(lines[i]);
-      out.push(`\n<aside class="box">${m[1] ? `<h2 class="box-title">${esc(m[1])}</h2>` : ''}\n\n${preprocess(inner.join('\n'), pages)}\n\n</aside>\n`);
+      out.push(
+        `\n<aside class="box">${m[1] ? `<h2 class="box-title">${esc(m[1])}</h2>` : ''}\n\n${preprocess(inner.join('\n'), pages)}\n\n</aside>\n`,
+      );
     } else if (/^:::sources\s*$/.test(line)) {
       out.push('\n' + renderSources() + '\n');
     } else if (/^:::topics\s*$/.test(line)) {
       out.push('\n' + renderTopics(pages) + '\n');
     } else if (/^:::timeline\s*$/.test(line)) {
-      out.push(`\n<div class="timeline-mount" data-timeline aria-busy="true"><p class="chart-loading">${esc(ui.chart.loading)}</p></div>\n`);
+      out.push(
+        `\n<div class="timeline-mount" data-timeline aria-busy="true"><p class="chart-loading">${esc(ui.chart.loading)}</p></div>\n`,
+      );
     } else if (/^:::dashboard\s*$/.test(line)) {
       out.push('\n' + fs.readFileSync(path.join(CONTENT, 'dashboard.html'), 'utf8') + '\n');
     } else {
@@ -209,7 +259,13 @@ marked.use({
     heading({ tokens, depth }) {
       const text = this.parser.parseInline(tokens);
       const plain = text.replace(/<[^>]+>/g, '');
-      let slug = plain.toLowerCase().replace(/[æ]/g, 'ae').replace(/[ø]/g, 'o').replace(/[å]/g, 'a').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      let slug = plain
+        .toLowerCase()
+        .replace(/[æ]/g, 'ae')
+        .replace(/[ø]/g, 'o')
+        .replace(/[å]/g, 'a')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
       const n = (slugs.get(slug) ?? 0) + 1;
       slugs.set(slug, n);
       if (n > 1) slug += `-${n}`;
@@ -248,13 +304,18 @@ function layout(page, pages) {
   if (meta.parent === 'sol-og-jord') {
     crumbs.push(`<a href="${abs('/sol-og-jord/')}">${esc(ui.nav.find((n) => n.key === 'sol-og-jord').label)}</a>`);
   }
-  const sub = meta.parent === 'sol-og-jord' ? pages.filter((p) => p.meta.parent === 'sol-og-jord').sort((a, b) => Number(a.meta.order) - Number(b.meta.order)) : [];
+  const sub =
+    meta.parent === 'sol-og-jord'
+      ? pages.filter((p) => p.meta.parent === 'sol-og-jord').sort((a, b) => Number(a.meta.order) - Number(b.meta.order))
+      : [];
   const idx = sub.findIndex((p) => p.meta.route === meta.route);
   const pager =
     sub.length && idx >= 0
       ? `<nav class="pager" aria-label="${esc(ui.pager.label)}">${idx > 0 ? `<a rel="prev" href="${abs(sub[idx - 1].meta.route)}"><span>← ${esc(ui.pager.prev)}</span>${esc(sub[idx - 1].meta.title)}</a>` : '<span></span>'}${idx < sub.length - 1 ? `<a rel="next" href="${abs(sub[idx + 1].meta.route)}"><span>${esc(ui.pager.next)} →</span>${esc(sub[idx + 1].meta.title)}</a>` : '<span></span>'}</nav>`
       : '';
-  const badge = meta.evidence ? `<p class="page-badge">${evidenceBadge(meta.evidence)} <span class="muted">${esc(ui.evidence[meta.evidence].desc)}</span></p>` : '';
+  const badge = meta.evidence
+    ? `<p class="page-badge">${evidenceBadge(meta.evidence)} <span class="muted">${esc(ui.evidence[meta.evidence].desc)}</span></p>`
+    : '';
   const generated = manifest.generated_at ? fmt(manifest.generated_at, 'date') : '–';
   return `<!doctype html>
 <html lang="${ui.lang}">
@@ -318,7 +379,13 @@ for (const p of pages) {
   outputs.push(path.relative(ROOT, out));
 }
 // 404-side
-const nf = layout({ meta: { title: ui.notfound.title, description: ui.notfound.title, route: '/404', nav: '' }, html: `<p>${esc(ui.notfound.text)}</p><p><a href="${abs('/')}">${esc(ui.notfound.home)}</a></p>` }, pages);
+const nf = layout(
+  {
+    meta: { title: ui.notfound.title, description: ui.notfound.title, route: '/404', nav: '' },
+    html: `<p>${esc(ui.notfound.text)}</p><p><a href="${abs('/')}">${esc(ui.notfound.home)}</a></p>`,
+  },
+  pages,
+);
 fs.writeFileSync(path.join(ROOT, '404.html'), nf, 'utf8');
 outputs.push('404.html');
 fs.writeFileSync(path.join(ROOT, 'scripts', 'pages.generated.json'), JSON.stringify(outputs.sort(), null, 2) + '\n');

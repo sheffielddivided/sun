@@ -1,0 +1,21 @@
+name: Oppdater årlig
+
+on:
+  schedule:
+    - cron: '0 5 15 1 *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  update:
+    uses: ./.github/workflows/_update.yml
+    with:
+      group: yearly
+    permissions:
+      contents: write
+      pages: write
+      id-token: write

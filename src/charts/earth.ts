@@ -15,7 +15,8 @@ export async function tsiSeries(): Promise<ChartInstance> {
   ];
   return {
     title: 'Total solinnstråling (TSI) 1850–i dag',
-    subtitle: 'Årsmiddel fra NOAA CDR (modell, NNLTSI) og månedlig måling fra TSIS-1 (2018–). Merk den korte y-aksen: variasjonen er rundt 0,1 %.',
+    subtitle:
+      'Årsmiddel fra NOAA CDR (modell, NNLTSI) og månedlig måling fra TSIS-1 (2018–). Merk den korte y-aksen: variasjonen er rundt 0,1 %.',
     alt: `TSI i watt per kvadratmeter ved ett astronomisk enhet. NNLTSI-modellen varierer mellom ca. ${num(Math.min(...t.tsi.filter((v: number | null) => v !== null)), 1)} og ${num(Math.max(...t.tsi.filter((v: number | null) => v !== null)), 1)} W/m² siden 1610, med en syklus på omtrent 1 W/m². TSIS-1 viser økningen i syklus 25.`,
     sources: ['tsi'],
     columns: [
@@ -69,7 +70,12 @@ export async function tsiCycleRange(): Promise<ChartInstance> {
         y: { label: 'W/m²', grid: false, labelAnchor: 'top', domain: [0, 1.6] },
         marks: [
           Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }),
-          Plot.barY(cyc, { x: 'cycle', y: 'range_wm2', fill: pal.s1, title: (c: { cycle: number; range_wm2: number }) => `Syklus ${c.cycle}: ${c.range_wm2.toFixed(2)} W/m²` }),
+          Plot.barY(cyc, {
+            x: 'cycle',
+            y: 'range_wm2',
+            fill: pal.s1,
+            title: (c: { cycle: number; range_wm2: number }) => `Syklus ${c.cycle}: ${c.range_wm2.toFixed(2)} W/m²`,
+          }),
           Plot.ruleY([0], { stroke: pal.muted }),
         ],
       }),
@@ -87,7 +93,8 @@ export async function tempSeries(): Promise<ChartInstance> {
   const xs = ta.year.map((y: number) => y + 0.5);
   return {
     title: 'Global temperatur og solaktivitet 1850–2025',
-    subtitle: 'Øverst: årlig global temperaturanomali (referanse 1961–1990). Nederst: solflekktall, 11-årig glidende middel. Stiplet linje: 1980.',
+    subtitle:
+      'Øverst: årlig global temperaturanomali (referanse 1961–1990). Nederst: solflekktall, 11-årig glidende middel. Stiplet linje: 1980.',
     alt: `To paneler. Øverst stiger global temperatur fra rundt −0,3 °C (1880) til ca. +${num(ta.gistemp[ta.gistemp.length - 1], 1)} °C anomali i 2025. Nederst svinger det glattede solflekktallet i 11-års sykluser uten stigende trend siden 1950-tallet. Etter 1980 divergerer seriene.`,
     sources: ['temperature', 'silso_monthly'],
     columns: [
@@ -174,7 +181,8 @@ export async function cosmicSeries(): Promise<ChartInstance> {
   });
   return {
     title: 'Kosmisk stråling (modulasjonspotensial Φ) og solflekktall',
-    subtitle: 'Høy Φ = sterk skjerming fra solvinden = lav intensitet av kosmisk stråling ved Jorden. Φ er rekonstruert fra bakkebaserte nøytronmonitorer.',
+    subtitle:
+      'Høy Φ = sterk skjerming fra solvinden = lav intensitet av kosmisk stråling ved Jorden. Φ er rekonstruert fra bakkebaserte nøytronmonitorer.',
     alt: `To paneler 1936–2025. Φ (øverst) og glattet solflekktall (nederst) følger hverandre: Φ er høy når solflekktallet er høyt, noe som betyr at kosmisk stråling er lavest ved solmaksimum.`,
     sources: ['cosmic', 'silso_monthly'],
     columns: [
@@ -191,8 +199,26 @@ export async function cosmicSeries(): Promise<ChartInstance> {
       { label: 'Solflekktall (glattet)', color: 'var(--s1)' },
     ],
     render: ({ width, range, pal }) => {
-      const top = timeSeries({ width, pal, range, height: 230, yLabel: 'Φ (MV)', series: [{ name: 'Φ månedlig', color: pal.s3, width: 0.8, opacity: 0.45, data: pts(c.t, c.phi) }, { name: 'Φ 13 mnd', color: pal.s3, width: 2.2, data: pts(c.t, phi13) }] });
-      const bottom = timeSeries({ width, pal, range, height: 190, yLabel: 'Solflekktall', series: [{ name: 'Solflekktall', color: pal.s1, width: 2, data: pts(m.t, m.smoothed) }], yDomain: [0, 260] });
+      const top = timeSeries({
+        width,
+        pal,
+        range,
+        height: 230,
+        yLabel: 'Φ (MV)',
+        series: [
+          { name: 'Φ månedlig', color: pal.s3, width: 0.8, opacity: 0.45, data: pts(c.t, c.phi) },
+          { name: 'Φ 13 mnd', color: pal.s3, width: 2.2, data: pts(c.t, phi13) },
+        ],
+      });
+      const bottom = timeSeries({
+        width,
+        pal,
+        range,
+        height: 190,
+        yLabel: 'Solflekktall',
+        series: [{ name: 'Solflekktall', color: pal.s1, width: 2, data: pts(m.t, m.smoothed) }],
+        yDomain: [0, 260],
+      });
       return stack(top, bottom);
     },
   };
@@ -209,7 +235,8 @@ export async function lagScanCosmic(): Promise<ChartInstance> {
     columns: lagColumns(),
     rows: lagRows(s.lags),
     csvName: 'korrelasjon_phi_solflekktall_per_lag',
-    render: ({ width, pal }) => lagPlot({ width, pal, sets: [{ name: 'Φ', color: pal.s3, rows: s.lags }], xLabel: 'Forsinkelse (år)' }),
+    render: ({ width, pal }) =>
+      lagPlot({ width, pal, sets: [{ name: 'Φ', color: pal.s3, rows: s.lags }], xLabel: 'Forsinkelse (år)' }),
   };
 }
 
@@ -238,8 +265,24 @@ export async function geomagAnnual(): Promise<ChartInstance> {
     ],
     render: ({ width, range, pal }) => {
       const r: [number, number] = range ? [range[0], range[1] + 1] : [sc.year[0], last(sc.year) + 1];
-      const top = timeSeries({ width, pal, range: r, height: 240, yLabel: 'Stormdøgn per år', series: [{ name: 'Stormdøgn', color: pal.s2, kind: 'bar', data: pts(x, sc.storm_days) }], yDomain: [0, Math.max(...sc.storm_days) * 1.1] });
-      const bottom = timeSeries({ width, pal, range: r, height: 190, yLabel: 'Solflekktall', series: [{ name: 'Solflekktall', color: pal.s1, width: 2, data: pts(x, sc.ssn) }], yDomain: [0, 220] });
+      const top = timeSeries({
+        width,
+        pal,
+        range: r,
+        height: 240,
+        yLabel: 'Stormdøgn per år',
+        series: [{ name: 'Stormdøgn', color: pal.s2, kind: 'bar', data: pts(x, sc.storm_days) }],
+        yDomain: [0, Math.max(...sc.storm_days) * 1.1],
+      });
+      const bottom = timeSeries({
+        width,
+        pal,
+        range: r,
+        height: 190,
+        yLabel: 'Solflekktall',
+        series: [{ name: 'Solflekktall', color: pal.s1, width: 2, data: pts(x, sc.ssn) }],
+        yDomain: [0, 220],
+      });
       return stack(top, bottom);
     },
   };
@@ -269,18 +312,43 @@ export async function geomagPhase(): Promise<ChartInstance> {
       { label: 'Solflekktall (glattet)', color: 'var(--s1)' },
     ],
     render: ({ width, pal }) => {
-      const d = bins.map((b, i) => ({ b, v: p.storm_days[i] as number, lo: p.storm_days[i] - p.storm_sd[i], hi: p.storm_days[i] + p.storm_sd[i], ssn: p.ssn[i] as number }));
+      const d = bins.map((b, i) => ({
+        b,
+        v: p.storm_days[i] as number,
+        lo: p.storm_days[i] - p.storm_sd[i],
+        hi: p.storm_days[i] + p.storm_sd[i],
+        ssn: p.ssn[i] as number,
+      }));
       const top = Plot.plot({
         ...baseOpts(width, pal, 240),
         x: { label: null, domain: bins, axis: null },
-        y: { label: 'Stormdøgn per måned', grid: false, labelAnchor: 'top', domain: [0, Math.max(...d.map((q) => q.hi)) * 1.1] },
-        marks: [Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }), Plot.barY(d, { x: 'b', y: 'v', fill: pal.s2 }), Plot.ruleX(d, { x: 'b', y1: 'lo', y2: 'hi', stroke: pal.fg, strokeWidth: 1.5 }), Plot.ruleY([0], { stroke: pal.muted })],
+        y: {
+          label: 'Stormdøgn per måned',
+          grid: false,
+          labelAnchor: 'top',
+          domain: [0, Math.max(...d.map((q) => q.hi)) * 1.1],
+        },
+        marks: [
+          Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }),
+          Plot.barY(d, { x: 'b', y: 'v', fill: pal.s2 }),
+          Plot.ruleX(d, { x: 'b', y1: 'lo', y2: 'hi', stroke: pal.fg, strokeWidth: 1.5 }),
+          Plot.ruleY([0], { stroke: pal.muted }),
+        ],
       });
       const bottom = Plot.plot({
         ...baseOpts(width, pal, 190),
-        x: { label: 'Fase av solsyklusen (0 % = minimum, 100 % = neste minimum)', domain: bins, labelAnchor: 'center', tickSize: 0 },
+        x: {
+          label: 'Fase av solsyklusen (0 % = minimum, 100 % = neste minimum)',
+          domain: bins,
+          labelAnchor: 'center',
+          tickSize: 0,
+        },
         y: { label: 'Solflekktall', grid: false, labelAnchor: 'top', domain: [0, 220] },
-        marks: [Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }), Plot.barY(d, { x: 'b', y: 'ssn', fill: pal.s1 }), Plot.ruleY([0], { stroke: pal.muted })],
+        marks: [
+          Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 }),
+          Plot.barY(d, { x: 'b', y: 'ssn', fill: pal.s1 }),
+          Plot.ruleY([0], { stroke: pal.muted }),
+        ],
       });
       return stack(top, bottom);
     },
@@ -294,8 +362,12 @@ export async function maunderChart(): Promise<ChartInstance> {
   const x = s.year.map((y: number) => y + 0.5);
   return {
     title: 'Solflekkgrupper og vulkansk sulfatinjeksjon 1600–1900',
-    subtitle: 'Øverst: årlig gruppesolflekktall (to rekonstruksjoner). Nederst: global stratosfærisk sulfatinjeksjon fra vulkanutbrudd (IVI2, Tg svovel).',
-    alt: `Gruppesolflekktall 1600–1900 og vulkansk sulfatinjeksjon. Perioden 1645–1715 har svært få registrerte solflekkgrupper. Store vulkanutbrudd (høyest: ${a.ivi2_top_years.slice(0, 3).map((e: any) => `${e.year}: ${num(e.global_tg, 0)} Tg`).join(', ')}) opptrer både under og utenfor solminimumene.`,
+    subtitle:
+      'Øverst: årlig gruppesolflekktall (to rekonstruksjoner). Nederst: global stratosfærisk sulfatinjeksjon fra vulkanutbrudd (IVI2, Tg svovel).',
+    alt: `Gruppesolflekktall 1600–1900 og vulkansk sulfatinjeksjon. Perioden 1645–1715 har svært få registrerte solflekkgrupper. Store vulkanutbrudd (høyest: ${a.ivi2_top_years
+      .slice(0, 3)
+      .map((e: any) => `${e.year}: ${num(e.global_tg, 0)} Tg`)
+      .join(', ')}) opptrer både under og utenfor solminimumene.`,
     sources: ['silso_groups', 'ivi2'],
     columns: [
       { key: 'year', label: 'År' },
@@ -315,8 +387,29 @@ export async function maunderChart(): Promise<ChartInstance> {
     render: ({ width, range, pal }) => {
       const r: [number, number] = range ? [range[0], range[1] + 1] : [1600, 1901];
       const spans = [{ x1: 1645, x2: 1715, label: 'Maunder-minimum' }];
-      const top = timeSeries({ width, pal, range: r, height: 230, yLabel: 'Gruppetall', series: [{ name: 'Backbone', color: pal.s1, width: 1.8, data: pts(x, s.gn_backbone) }, { name: 'Hoyt & Schatten', color: pal.s2, width: 1.8, data: pts(x, s.gn_hs) }], spans, yDomain: [0, 12] });
-      const bottom = timeSeries({ width, pal, range: r, height: 200, yLabel: 'Sulfat (Tg S)', series: [{ name: 'IVI2', color: pal.s4, kind: 'bar', data: pts(x, s.ivi2_global_tg) }], spans: [{ x1: 1645, x2: 1715, label: '' }], yDomain: [0, 110] });
+      const top = timeSeries({
+        width,
+        pal,
+        range: r,
+        height: 230,
+        yLabel: 'Gruppetall',
+        series: [
+          { name: 'Backbone', color: pal.s1, width: 1.8, data: pts(x, s.gn_backbone) },
+          { name: 'Hoyt & Schatten', color: pal.s2, width: 1.8, data: pts(x, s.gn_hs) },
+        ],
+        spans,
+        yDomain: [0, 12],
+      });
+      const bottom = timeSeries({
+        width,
+        pal,
+        range: r,
+        height: 200,
+        yLabel: 'Sulfat (Tg S)',
+        series: [{ name: 'IVI2', color: pal.s4, kind: 'bar', data: pts(x, s.ivi2_global_tg) }],
+        spans: [{ x1: 1645, x2: 1715, label: '' }],
+        yDomain: [0, 110],
+      });
       return stack(top, bottom);
     },
   };
@@ -368,8 +461,22 @@ export async function naoSeries(): Promise<ChartInstance> {
     rows: s.year.map((y, i) => [y, s.nao_djf[i], s.ssn[i]]),
     csvName: 'nao_djf_og_solflekktall',
     render: ({ width, pal }) => {
-      const top = timeSeries({ width, pal, height: 220, yLabel: 'NAO (DJF)', series: [{ name: 'NAO', color: pal.s2, kind: 'bar', data: pts(x, s.nao_djf) }], zeroLine: true });
-      const bottom = timeSeries({ width, pal, height: 180, yLabel: 'Solflekktall', series: [{ name: 'Solflekktall', color: pal.s1, width: 2, data: pts(x, s.ssn) }], yDomain: [0, 220] });
+      const top = timeSeries({
+        width,
+        pal,
+        height: 220,
+        yLabel: 'NAO (DJF)',
+        series: [{ name: 'NAO', color: pal.s2, kind: 'bar', data: pts(x, s.nao_djf) }],
+        zeroLine: true,
+      });
+      const bottom = timeSeries({
+        width,
+        pal,
+        height: 180,
+        yLabel: 'Solflekktall',
+        series: [{ name: 'Solflekktall', color: pal.s1, width: 2, data: pts(x, s.ssn) }],
+        yDomain: [0, 220],
+      });
       return stack(top, bottom);
     },
   };
@@ -404,7 +511,17 @@ export async function spuriousExample(): Promise<ChartInstance> {
       { label: 'Tilfeldig vandring', color: 'var(--s2)' },
     ],
     render: ({ width, pal }) =>
-      timeSeries({ width, pal, height: 260, yLabel: 'Standardisert verdi (z)', series: [{ name: 'Solflekktall', color: pal.s1, width: 2, data: pts(x, zs) }, { name: 'Tilfeldig vandring', color: pal.s2, width: 2, data: pts(x, zr) }], zeroLine: true }),
+      timeSeries({
+        width,
+        pal,
+        height: 260,
+        yLabel: 'Standardisert verdi (z)',
+        series: [
+          { name: 'Solflekktall', color: pal.s1, width: 2, data: pts(x, zs) },
+          { name: 'Tilfeldig vandring', color: pal.s2, width: 2, data: pts(x, zr) },
+        ],
+        zeroLine: true,
+      }),
   };
 }
 
@@ -429,7 +546,14 @@ export async function spuriousRates(): Promise<ChartInstance> {
       { key: 'share_abs_r_gt_0_3', label: 'Andel med |r| > 0,3 (%)', digits: 1 },
       { key: 'share_abs_r_gt_0_5', label: 'Andel med |r| > 0,5 (%)', digits: 1 },
     ],
-    rows: sc.map((s) => [s.name, 100 * s.false_positive_naive, 100 * s.false_positive_neff, 100 * s.false_positive_surrogate, 100 * s.share_abs_r_gt_0_3, 100 * s.share_abs_r_gt_0_5]),
+    rows: sc.map((s) => [
+      s.name,
+      100 * s.false_positive_naive,
+      100 * s.false_positive_neff,
+      100 * s.false_positive_surrogate,
+      100 * s.share_abs_r_gt_0_3,
+      100 * s.share_abs_r_gt_0_5,
+    ]),
     tableOpen: true,
     csvName: 'falsk_positiv_rate_tilfeldige_serier',
     legend: [

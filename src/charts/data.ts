@@ -7,7 +7,10 @@ import { rolling } from './common';
 
 export async function ssnMonthly(): Promise<ChartInstance> {
   const m = await getJSON('ssn_monthly.json');
-  const lastI = m.ssn.map((v: number | null, i: number) => (v !== null ? i : -1)).filter((i: number) => i >= 0).pop()!;
+  const lastI = m.ssn
+    .map((v: number | null, i: number) => (v !== null ? i : -1))
+    .filter((i: number) => i >= 0)
+    .pop()!;
   return {
     title: 'Månedlig og glattet månedlig solflekktall siden 1749',
     subtitle: 'SILSO V2.0. Glattet = 13-måneders glidende middel (halvvektet i endene). Velg periode for å zoome.',
@@ -66,10 +69,11 @@ export async function ssnYearly(): Promise<ChartInstance> {
         pal,
         range: range ? [range[0], range[1] + 1] : null,
         yLabel: 'Solflekktall',
-        series: [{ name: 'Årsmiddel', color: pal.s1, width: 2, data: pts(x, y.ssn) }, { name: 'Årsmiddel', color: pal.s1, kind: 'dot', r: 2.4, opacity: 1, data: pts(x, y.ssn) }],
-        spans: [
-          { x1: 1790, x2: 1830, label: 'Dalton' },
+        series: [
+          { name: 'Årsmiddel', color: pal.s1, width: 2, data: pts(x, y.ssn) },
+          { name: 'Årsmiddel', color: pal.s1, kind: 'dot', r: 2.4, opacity: 1, data: pts(x, y.ssn) },
         ],
+        spans: [{ x1: 1790, x2: 1830, label: 'Dalton' }],
         yDomain: [0, 220],
       }),
   };
@@ -80,7 +84,8 @@ export async function groupNumber(): Promise<ChartInstance> {
   const x = g.year.map((v: number) => v + 0.5);
   return {
     title: 'Gruppesolflekktall 1610–2015 (to rekonstruksjoner)',
-    subtitle: 'Antall solflekkgrupper (ikke det samme som solflekktallet). Backbone-serien og Hoyt & Schatten-serien er uenige om nivået før ca. 1880.',
+    subtitle:
+      'Antall solflekkgrupper (ikke det samme som solflekktallet). Backbone-serien og Hoyt & Schatten-serien er uenige om nivået før ca. 1880.',
     alt: `Årlig gruppesolflekktall fra ${g.year[0]} til ${last(g.year)} for to rekonstruksjoner. Perioden ca. 1645–1715 (Maunder-minimum) har svært få observerte grupper. Før 1749 er dekningen sparsom.`,
     sources: ['silso_groups'],
     columns: [
@@ -107,7 +112,10 @@ export async function groupNumber(): Promise<ChartInstance> {
           { name: 'Backbone', color: pal.s1, width: 1.8, data: pts(x, g.backbone) },
           { name: 'Hoyt & Schatten', color: pal.s2, width: 1.8, data: pts(x, g.hs) },
         ],
-        spans: [{ x1: 1645, x2: 1715, label: 'Maunder' }, { x1: 1790, x2: 1830, label: 'Dalton' }],
+        spans: [
+          { x1: 1645, x2: 1715, label: 'Maunder' },
+          { x1: 1790, x2: 1830, label: 'Dalton' },
+        ],
         yDomain: [0, 14],
       }),
   };
@@ -120,7 +128,8 @@ export async function cyclesOverlay(): Promise<ChartInstance> {
   const lines: { n: number; pts: { x: number; y: number }[] }[] = cycles.map((cy) => {
     const p: { x: number; y: number }[] = [];
     for (let i = 0; i < m.t.length; i++) {
-      if (m.t[i] >= cy.start_t && (cy.end_t === null || m.t[i] < cy.end_t) && m.smoothed[i] !== null) p.push({ x: m.t[i] - cy.start_t, y: m.smoothed[i] });
+      if (m.t[i] >= cy.start_t && (cy.end_t === null || m.t[i] < cy.end_t) && m.smoothed[i] !== null)
+        p.push({ x: m.t[i] - cy.start_t, y: m.smoothed[i] });
     }
     return { n: cy.n, pts: p };
   });
@@ -151,8 +160,10 @@ export async function cyclesOverlay(): Promise<ChartInstance> {
     render: ({ width, pal }) => {
       const color = (n: number) => (n === 25 ? pal.s1 : n === 24 ? pal.s2 : n === 19 ? pal.s4 : pal.s5);
       const marks: Plot.Markish[] = [Plot.gridY({ stroke: pal.grid, strokeOpacity: 0.7 })];
-      for (const l of lines.filter((l) => ![19, 24, 25].includes(l.n))) marks.push(Plot.line(l.pts, { x: 'x', y: 'y', stroke: color(l.n), strokeWidth: 1, strokeOpacity: 0.55 }));
-      for (const l of lines.filter((l) => [19, 24].includes(l.n))) marks.push(Plot.line(l.pts, { x: 'x', y: 'y', stroke: color(l.n), strokeWidth: 2 }));
+      for (const l of lines.filter((l) => ![19, 24, 25].includes(l.n)))
+        marks.push(Plot.line(l.pts, { x: 'x', y: 'y', stroke: color(l.n), strokeWidth: 1, strokeOpacity: 0.55 }));
+      for (const l of lines.filter((l) => [19, 24].includes(l.n)))
+        marks.push(Plot.line(l.pts, { x: 'x', y: 'y', stroke: color(l.n), strokeWidth: 2 }));
       marks.push(Plot.line(lines[24].pts, { x: 'x', y: 'y', stroke: color(25), strokeWidth: 3 }));
       marks.push(
         Plot.text(
@@ -176,7 +187,8 @@ export async function hemispheric(): Promise<ChartInstance> {
   const s13 = rolling(h.south, 13);
   return {
     title: 'Nordlige og sørlige halvkule (1992–)',
-    subtitle: 'Månedlig solflekktall per halvkule (tynne linjer) og 13-måneders glidende middel (tykke linjer). Halvkulene topper ikke alltid samtidig.',
+    subtitle:
+      'Månedlig solflekktall per halvkule (tynne linjer) og 13-måneders glidende middel (tykke linjer). Halvkulene topper ikke alltid samtidig.',
     alt: `Solflekktall for solens nordlige og sørlige halvkule fra ${decYear(h.t[0])} til ${decYear(last(h.t))}. Halvkulene varierer i takt over syklusen, men med tidvise forskjeller i styrke og tid.`,
     sources: ['silso_monthly'],
     columns: [
@@ -254,7 +266,8 @@ export async function butterfly(): Promise<ChartInstance> {
   }
   return {
     title: 'Sommerfugldiagram: solflekkareal etter breddegrad 1874–2016',
-    subtitle: 'Gjennomsnittlig solflekkareal (millionedeler av en halvkule) per halvår og breddebånd. Flekkene starter på høye breddegrader og vandrer mot ekvator i løpet av hver syklus.',
+    subtitle:
+      'Gjennomsnittlig solflekkareal (millionedeler av en halvkule) per halvår og breddebånd. Flekkene starter på høye breddegrader og vandrer mot ekvator i løpet av hver syklus.',
     alt: `Sommerfugldiagram: breddegrad mot tid fra ${num(t0, 0)} til ${num(t0 + nrot * dt, 0)}. Solflekkene opptrer i to bånd, ett på hver halvkule, som starter rundt 30–35 graders bredde og nærmer seg ekvator mot slutten av hver syklus.`,
     sources: ['butterfly'],
     columns: [
@@ -263,7 +276,12 @@ export async function butterfly(): Promise<ChartInstance> {
       { key: 'south_mean_area', label: 'Sør, gj.snitt areal per rotasjon', digits: 0 },
       { key: 'rotations', label: 'Antall rotasjoner' },
     ],
-    rows: years.map((y) => [y, (annualN.get(y) ?? 0) / (annualC.get(y) ?? 1), (annualS.get(y) ?? 0) / (annualC.get(y) ?? 1), annualC.get(y) ?? 0]),
+    rows: years.map((y) => [
+      y,
+      (annualN.get(y) ?? 0) / (annualC.get(y) ?? 1),
+      (annualS.get(y) ?? 0) / (annualC.get(y) ?? 1),
+      annualC.get(y) ?? 0,
+    ]),
     rangeCol: 0,
     range: { min: Math.ceil(t0), max: Math.floor(t0 + nrot * dt), presets: [100, 50, 25] },
     csvName: 'sommerfugldiagram_aarlig_areal_per_halvkule',
@@ -277,7 +295,14 @@ export async function butterfly(): Promise<ChartInstance> {
         y: { label: 'Breddegrad (°)', domain: [-50, 50], ticks: [-40, -20, 0, 20, 40], labelAnchor: 'top' },
         color: { type: 'sqrt', domain: [0, maxV], range: [pal.bg, pal.s1], legend: false },
         marks: [
-          Plot.rect(g, { x1: 'x1', x2: 'x2', y1: 'y1', y2: 'y2', fill: 'v', title: (c: { v: number }) => `${num(c.v, 0)} millionedeler av en halvkule` }),
+          Plot.rect(g, {
+            x1: 'x1',
+            x2: 'x2',
+            y1: 'y1',
+            y2: 'y2',
+            fill: 'v',
+            title: (c: { v: number }) => `${num(c.v, 0)} millionedeler av en halvkule`,
+          }),
           Plot.ruleY([0], { stroke: pal.muted, strokeOpacity: 0.6 }),
         ],
       });

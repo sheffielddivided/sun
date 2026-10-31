@@ -13,7 +13,15 @@ export default defineConfig({
     target: 'es2022',
     chunkSizeWarningLimit: 700,
     rollupOptions: {
-      input: Object.fromEntries(pages.map((p) => [p.replace(/\/?index\.html$/, '').replace(/\.html$/, '').replace(/\//g, '-') || 'home', path.resolve(__dirname, p)])),
+      input: Object.fromEntries(
+        pages.map((p) => [
+          p
+            .replace(/\/?index\.html$/, '')
+            .replace(/\.html$/, '')
+            .replace(/\//g, '-') || 'home',
+          path.resolve(__dirname, p),
+        ]),
+      ),
     },
   },
   server: { port: 5173 },

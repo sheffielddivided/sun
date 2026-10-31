@@ -4,7 +4,11 @@ export function num(v: number | null | undefined, digits = 0, group = true): str
   const key = `${digits}-${group}`;
   let f = nf.get(key);
   if (!f) {
-    f = new Intl.NumberFormat('nb-NO', { minimumFractionDigits: digits, maximumFractionDigits: digits, useGrouping: group });
+    f = new Intl.NumberFormat('nb-NO', {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+      useGrouping: group,
+    });
     nf.set(key, f);
   }
   return f.format(v);
@@ -14,7 +18,20 @@ export function pval(p: number): string {
   if (p < 0.001) return '< 0,001';
   return num(p, p < 0.01 ? 3 : 2);
 }
-const MONTHS = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
+const MONTHS = [
+  'januar',
+  'februar',
+  'mars',
+  'april',
+  'mai',
+  'juni',
+  'juli',
+  'august',
+  'september',
+  'oktober',
+  'november',
+  'desember',
+];
 export function isoDate(s: string): string {
   const d = new Date(s.slice(0, 10) + 'T00:00:00Z');
   return `${d.getUTCDate()}. ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;

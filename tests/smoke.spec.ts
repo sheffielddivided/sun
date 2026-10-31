@@ -33,7 +33,9 @@ for (const route of pages) {
     const n = await figs.count();
     for (let i = 0; i < n; i++) {
       const f = figs.nth(i);
-      await expect(f, `graf ${await f.getAttribute('data-chart')}`).toHaveAttribute('aria-busy', 'false', { timeout: 20_000 });
+      await expect(f, `graf ${await f.getAttribute('data-chart')}`).toHaveAttribute('aria-busy', 'false', {
+        timeout: 20_000,
+      });
       await expect(f).not.toHaveAttribute('data-error', '1');
       // grafer med tegning skal ha en SVG/canvas og et tekstalternativ
       const plot = f.locator('.plot-wrap');
@@ -51,7 +53,8 @@ for (const route of pages) {
       await expect(page.locator('[data-field="kp-value"]')).not.toHaveText('–');
     }
     const text = await page.locator('main').innerText();
-    for (const bad of ['NaN', 'undefined', 'Infinity', 'TODO', 'lorem ipsum', 'Laster']) expect(text, `uventet «${bad}» i teksten`).not.toContain(bad);
+    for (const bad of ['NaN', 'undefined', 'Infinity', 'TODO', 'lorem ipsum', 'Laster'])
+      expect(text, `uventet «${bad}» i teksten`).not.toContain(bad);
     expect(errors, errors.join('\n')).toEqual([]);
   });
 }
@@ -85,7 +88,10 @@ test('CSV-nedlasting inneholder kildehenvisning', async ({ page }) => {
   const fig = page.locator('figure[data-chart="data-ssn-yearly"]');
   await fig.scrollIntoViewIfNeeded();
   await expect(fig).toHaveAttribute('aria-busy', 'false', { timeout: 20_000 });
-  const [dl] = await Promise.all([page.waitForEvent('download'), fig.getByRole('button', { name: 'Last ned CSV' }).click()]);
+  const [dl] = await Promise.all([
+    page.waitForEvent('download'),
+    fig.getByRole('button', { name: 'Last ned CSV' }).click(),
+  ]);
   const content = fs.readFileSync((await dl.path())!, 'utf8');
   expect(content).toContain('# Kilde:');
   expect(content).toContain('# Lisens:');

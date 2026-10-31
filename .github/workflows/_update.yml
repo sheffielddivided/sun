@@ -1,0 +1,61 @@
+# Gjenbrukbar arbeidsflyt: hent data → valider → kjør analyser → commit (kun ved endring) → bygg og publiser.
+name: _update (gjenbrukbar)
+
+on:
+  workflow_call:
+    inputs:
+      group:
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: data-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Test pipeline
+        run: python -m pytest -q pipeline/tests
+      - name: Hent data, valider og kjør analyser (én kilde som feiler stopper ikke resten)
+        run: python -m pipeline.run --group ${{ inputs.group }}
+      - name: Commit data bare hvis noe har endret seg
+        id: commit
+        run: |
+          if git diff --quiet -- public/data && [ -z "$(git ls-files --others --exclude-standard public/data)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Ingen endringer i data."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add public/data
+            git commit -m "Data: ${{ inputs.group }}-oppdatering $(date -u +%F)"
+            git pull --rebase origin main
+            git push origin HEAD:main
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: update
+    if: needs.update.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/deploy.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
