@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+pipeline/.cache/
+playwright-report/
+test-results/
+lighthouse/*.html
+.DS_Store
+
+# Genererte HTML-sider (scripts/gen-pages.mjs)
+/index.html
+/hva-er-solflekker/
+/historien/
+/dataserier/
+/sol-og-jord/
+/metode/
+/404.html
