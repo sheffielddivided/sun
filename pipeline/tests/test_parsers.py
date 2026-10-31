@@ -118,3 +118,29 @@ def test_butterfly(fx):
     assert butterfly.rotation_to_decimal_year(275) == pytest.approx(1874.35, abs=0.05)
     with pytest.raises(ValidationError):
         butterfly.parse_bfly(b"1 2 3 4")
+
+
+def test_isccp_aggregate_file():
+    """Syntetisk fil med samme struktur som ISCCP-H HGM (pakket: rå·0,1+50, fyllverdi 32767)."""
+    import io
+
+    import h5py
+    import numpy as np
+
+    from pipeline.sources import isccp
+
+    buf = io.BytesIO()
+    with h5py.File(buf, "w") as h:
+        h["lat"] = np.arange(-89.5, 90, 1.0)
+        h["time"] = np.array([4943.0])  # 1983-07-16
+        packed = lambda pct: np.full((1, 180, 360), int(round((pct - 50) * 10)), dtype=np.int16)  # noqa: E731
+        h["cldamt"] = packed(66.0)
+        types = np.stack([packed(30.0)[0], packed(20.0)[0], packed(13.0)[0]])[None]
+        types[0, 0, :10, :] = 32767  # manglende data nær sørpolen
+        h["cldamt_irtypes"] = types
+    out = isccp.aggregate_file(buf.getvalue())
+    assert out["year"] == 1983 and out["month"] == 7
+    assert out["global"]["total"] == pytest.approx(66.0, abs=0.01)
+    assert out["global"]["low"] == pytest.approx(30.0, abs=0.01)
+    assert out["tropics"]["high"] == pytest.approx(13.0, abs=0.01)
+    assert out["polar"]["low_cover"] < 1.0  # manglende celler reduserer dekningen

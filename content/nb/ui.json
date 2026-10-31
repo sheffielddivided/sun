@@ -55,7 +55,7 @@
     "status_ok": "OK",
     "status_stale": "Utdatert",
     "status_failed": "Ikke hentet",
-    "group": { "daily": "oppdateres daglig", "monthly": "oppdateres månedlig", "yearly": "oppdateres årlig" },
+    "group": { "daily": "oppdateres daglig", "monthly": "oppdateres månedlig", "yearly": "oppdateres årlig", "static": "avsluttet datasett (hentes manuelt)" },
     "last_fetched": "Sist endret",
     "last_point": "Siste datapunkt",
     "provider": "Leverandør",

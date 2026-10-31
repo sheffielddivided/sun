@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 
 from ..core import DATA_DIR, now_iso, write_json
-from . import context, solar_earth, volcano
+from . import context, solar_earth, svensmark, volcano
 from .cycles import build_cycles, summarize
 from .data import monthly_ssn
 
@@ -34,6 +34,7 @@ def run_analyses(manifest: dict, outdir=DATA_DIR) -> dict:
         "geomag": lambda: solar_earth.analyse_geomag(cycles, outdir),
         "regional": lambda: solar_earth.analyse_regional(outdir),
         "volcano": lambda: volcano.analyse_volcano(cycles, outdir),
+        "svensmark": lambda: svensmark.analyse_svensmark(outdir),
         "maunder": lambda: context.analyse_maunder(outdir),
         "spurious": lambda: context.analyse_spurious(outdir),
     }

@@ -14,6 +14,7 @@ MODULES = [
     "climate_indices",
     "volcanoes",
     "butterfly",
+    "isccp",
 ]
 
 

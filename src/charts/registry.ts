@@ -18,6 +18,8 @@ export const registry: Record<string, ChartFactory> = {
   'temp-lag': () => import('./earth').then((m) => m.lagScanTemp()),
   'cosmic-series': () => import('./earth').then((m) => m.cosmicSeries()),
   'cosmic-lag': () => import('./earth').then((m) => m.lagScanCosmic()),
+  'cloud-series': () => import('./earth').then((m) => m.cloudSeries()),
+  'cloud-lag': () => import('./earth').then((m) => m.cloudLag()),
   'geomag-annual': () => import('./earth').then((m) => m.geomagAnnual()),
   'geomag-phase': () => import('./earth').then((m) => m.geomagPhase()),
   'maunder-series': () => import('./earth').then((m) => m.maunderChart()),

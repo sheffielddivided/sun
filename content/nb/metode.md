@@ -53,6 +53,7 @@ Nettstedet bruker ingen sporing, ingen informasjonskapsler og ingen eksterne tje
 - Total solinnstråling før 1978 er modellert, ikke målt, og korrelasjonen mellom modellen og solflekktallet er delvis bygget inn.
 - Rå nøytronmonitor-tellerater fra Oulu var ikke tilgjengelige da nettstedet ble bygget; Oulus publiserte modulasjonspotensial (Φ) brukes i stedet.
 - Smithsonian-nettstedet for vulkandatabasen var nede ved bygging; dataene hentes fra deres WFS-tjeneste, som gir de samme dataene.
+- Skydekke (ISCCP-H) dekker bare 1983–2017 (ca. tre solsykluser) og har kjente instrumentartefakter i langtidstrender; testen av Svensmark-hypotesen har derfor lav statistisk kraft. Datasettet er avsluttet og hentes bare manuelt.
 - Gruppesolflekktall før 1749 er usikre og rekonstruksjonene er uenige.
 - Pipelinen overvåker ikke hvordan kildene endrer sine definisjoner over tid, utover de automatiske kontrollene.
 
@@ -70,6 +71,7 @@ Bare referanser vi har kontrollert at finnes, er tatt med.
 - Feulner, G. & Rahmstorf, S. (2010). On the effect of a new grand minimum of solar activity on the future climate on Earth. *Geophysical Research Letters*, 37, L05707.
 - Galilei, G. (1613). *Istoria e dimostrazioni intorno alle macchie solari e loro accidenti*. Roma.
 - Gao, C., Robock, A. & Ammann, C. (2008). Volcanic forcing of climate over the past 1500 years: An improved ice core-based index for climate models. *Journal of Geophysical Research*, 113, D23111.
+- Evan, A. T., Heidinger, A. K. & Vimont, D. J. (2007). Arguments against a physical long-term trend in global ISCCP cloud amounts. *Geophysical Research Letters*, 34, L04701.
 - Gray, L. J. m.fl. (2010). Solar influences on climate. *Reviews of Geophysics*, 48, RG4001.
 - Gray, L. J. m.fl. (2013). A lagged response to the 11 year solar cycle in observed winter Atlantic/European weather patterns. *Journal of Geophysical Research: Atmospheres*, 118, 13405–13420.
 - Hale, G. E., Ellerman, F., Nicholson, S. B. & Joy, A. H. (1919). The magnetic polarity of sun-spots. *The Astrophysical Journal*, 49, 153–178.
@@ -91,6 +93,7 @@ Bare referanser vi har kontrollert at finnes, er tatt med.
 - Pierce, J. R. & Adams, P. J. (2009). Can cosmic rays affect cloud condensation nuclei by altering new particle formation rates? *Geophysical Research Letters*, 36, L09820.
 - Robock, A. (2000). Volcanic eruptions and climate. *Reviews of Geophysics*, 38, 191–219.
 - Russell, C. T. & McPherron, R. L. (1973). Semiannual variation of geomagnetic activity. *Journal of Geophysical Research*, 78, 92–108.
+- Rossow, W. B. & Schiffer, R. A. (1999). Advances in understanding clouds from ISCCP. *Bulletin of the American Meteorological Society*, 80, 2261–2287.
 - Schreiber, T. & Schmitz, A. (2000). Surrogate time series. *Physica D*, 142, 346–382.
 - Schwabe, H. (1844). Sonnen-Beobachtungen im Jahre 1843. *Astronomische Nachrichten*, 21, 233–236.
 - Sloan, T. & Wolfendale, A. W. (2008). Testing the proposed causal link between cosmic rays and cloud cover. *Environmental Research Letters*, 3, 024001.
@@ -101,4 +104,5 @@ Bare referanser vi har kontrollert at finnes, er tatt med.
 - Usoskin, I. G. (2017). A history of solar activity over millennia. *Living Reviews in Solar Physics*, 14, 3.
 - Usoskin, I. G., Bazilevskaya, G. A. & Kovaltsov, G. A. (2011). Solar modulation parameter for cosmic rays since 1936 reconstructed from ground-based neutron monitors and ionization chambers. *Journal of Geophysical Research*, 116, A02104.
 - Wittmann, A. D. & Xu, Z. T. (1987). A catalogue of sunspot observations from 165 BC to AD 1684. *Astronomy and Astrophysics Supplement Series*, 70, 83–94.
+- Young, A. H., Knapp, K. R., Inamdar, A., Hankins, W. & Rossow, W. B. (2018). The International Satellite Cloud Climatology Project H-Series climate data record product. *Earth System Science Data*, 10, 583–593.
 - Yau, K. K. C. & Stephenson, F. R. (1988). A revised catalogue of Far Eastern observations of sunspots (165 BC to AD 1918). *Quarterly Journal of the Royal Astronomical Society*, 29, 175–197.

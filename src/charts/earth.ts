@@ -574,3 +574,112 @@ export async function spuriousRates(): Promise<ChartInstance> {
       }),
   };
 }
+
+// ---------------- Svensmark: skydekke mot kosmisk stråling ----------------
+export async function cloudSeries(): Promise<ChartInstance> {
+  const a = await getJSON('analysis_svensmark.json');
+  const s = a.series_data as {
+    year: number[];
+    cr_proxy_neg_phi: number[];
+    global_low_anom: number[];
+    global_low_anom_detrended: number[];
+  };
+  const x = s.year.map((y) => y + 0.5);
+  return {
+    title: 'Kosmisk stråling og globalt lavt skydekke 1984–2016',
+    subtitle:
+      'Øverst: proxy for kosmisk stråling (−Φ, avvik fra middel; høyere = mer kosmisk stråling). Nederst: årsmiddel av månedlige anomalier i lavt skydekke (ISCCP-H, global, % av arealet).',
+    alt: `To paneler ${s.year[0]}–${last(s.year)}. Kosmisk stråling (−Φ) svinger med solsyklusen, med topper ved solminima rundt 1986, 1996 og 2009. Globalt lavt skydekke fra ISCCP har en nedadgående trend på ca. ${num(a.main.linear_trend_pct_per_decade, 1)} prosentpoeng per tiår, som er kjent som delvis kunstig (instrumentdrift), og viser ingen tydelig syklus som følger kosmisk stråling gjennom hele perioden.`,
+    sources: ['isccp', 'cosmic'],
+    columns: [
+      { key: 'year', label: 'År' },
+      { key: 'cr_proxy_neg_phi_mv', label: 'Kosmisk stråling-proxy (−Φ, avvik, MV)', digits: 1 },
+      { key: 'global_low_cloud_anomaly_pct', label: 'Lavt skydekke, anomali (prosentpoeng)', digits: 3 },
+      { key: 'global_low_cloud_anomaly_detrended_pct', label: 'Samme, trendfjernet', digits: 3 },
+    ],
+    rows: s.year.map((y, i) => [y, s.cr_proxy_neg_phi[i], s.global_low_anom[i], s.global_low_anom_detrended[i]]),
+    csvName: 'kosmisk_straling_og_lavt_skydekke_aarlig',
+    legend: [
+      { label: 'Kosmisk stråling (−Φ)', color: 'var(--s3)' },
+      { label: 'Lavt skydekke (anomali)', color: 'var(--s2)' },
+      { label: 'Lavt skydekke, trendfjernet', color: 'var(--s1)' },
+    ],
+    render: ({ width, pal }) => {
+      const top = timeSeries({
+        width,
+        pal,
+        height: 210,
+        yLabel: '−Φ (MV, avvik)',
+        series: [
+          { name: 'Kosmisk stråling', color: pal.s3, width: 2.2, data: pts(x, s.cr_proxy_neg_phi) },
+          { name: 'Kosmisk stråling', color: pal.s3, kind: 'dot', r: 3, opacity: 1, data: pts(x, s.cr_proxy_neg_phi) },
+        ],
+        zeroLine: true,
+      });
+      const bottom = timeSeries({
+        width,
+        pal,
+        height: 210,
+        yLabel: 'Lavt skydekke (pp)',
+        series: [
+          { name: 'Anomali', color: pal.s2, width: 2.2, data: pts(x, s.global_low_anom) },
+          { name: 'Trendfjernet', color: pal.s1, width: 2, dash: '5 3', data: pts(x, s.global_low_anom_detrended) },
+        ],
+        zeroLine: true,
+      });
+      return stack(top, bottom);
+    },
+  };
+}
+
+export async function cloudLag(): Promise<ChartInstance> {
+  const a = await getJSON('analysis_svensmark.json');
+  const names: Record<string, string> = {
+    global_low: 'Globalt, lavt',
+    global_total: 'Globalt, totalt',
+    tropics_low: 'Tropene, lavt',
+    tropics_total: 'Tropene, totalt',
+    midlat_low: 'Midlere breddegrader, lavt',
+    midlat_total: 'Midlere breddegrader, totalt',
+  };
+  const keys = Object.keys(names);
+  const colors = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)', 'var(--s5)', 'var(--fg)'];
+  const rowsFor = (k: string) => a.series[k].lags.map((r: any) => ({ ...r, p_holm: r.p_holm_all }));
+  return {
+    title: 'Kosmisk stråling mot skydekke: korrelasjon per forsinkelse',
+    subtitle: `Trendfjernede årsmiddel ${a.series.global_low.period[0]}–${a.series.global_low.period[1]}. ${a.n_tests - 4} tester (6 serier × 4 forsinkelser). Positiv r = mer kosmisk stråling gir mer skyer (som hypotesen forutsier). Positiv forsinkelse = skyene følger etter. Fylte punkter = signifikant etter Holm-korreksjon over alle tester.`,
+    alt: `Korrelasjon mellom kosmisk-stråling-proxyen og skydekke for seks serier og forsinkelser −1 til 2 år. Variasjonen ligger mellom r = −0,5 og r = +0,3. Ingen er signifikant etter korreksjon; minste Holm-justerte p er ${num(a.min_p_holm_all, 2)}.`,
+    sources: ['isccp', 'cosmic'],
+    columns: [
+      { key: 'serie', label: 'Skyserie' },
+      ...lagColumns(),
+      { key: 'p_holm_all', label: 'p (Holm, alle tester)', digits: 4 },
+    ],
+    rows: keys.flatMap((k) =>
+      a.series[k].lags.map((r: any) => [
+        names[k],
+        r.lag,
+        r.r,
+        r.ci_lo,
+        r.ci_hi,
+        r.n,
+        r.neff,
+        r.p_surrogate,
+        r.p_holm,
+        r.p_holm_all,
+      ]),
+    ),
+    csvName: 'kosmisk_straling_mot_skydekke_per_lag',
+    legend: keys.map((k, i) => ({ label: names[k], color: colors[i] })),
+    render: ({ width, pal }) => {
+      const cols = [pal.s1, pal.s2, pal.s3, pal.s4, pal.s5, pal.fg];
+      return lagPlot({
+        width,
+        pal,
+        height: 320,
+        xLabel: 'Forsinkelse (år, skyer etter kosmisk stråling)',
+        sets: keys.map((k, i) => ({ name: names[k], color: cols[i], rows: rowsFor(k) })),
+      });
+    },
+  };
+}

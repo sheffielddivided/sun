@@ -41,3 +41,8 @@ Format: **beslutning** – alternativer – begrunnelse. Datoer er byggedato 202
 
 27. **Hovedgren `main` fikk koden ved fast-forward fra `claude/sunspots-site`.** Pages-kilde = GitHub Actions (se README «Manuelle steg» for det som evt. krever klikk).
 28. **Reusable workflow `_update.yml`** brukes av de tre tidsplanlagte workflows; commit med `GITHUB_TOKEN` utløser ikke `deploy.yml`, så deploy kalles eksplisitt etter vellykket datacommit.
+
+## Svensmark-test (lagt til senere)
+
+29. **Skydata: ISCCP-H månedlige 1°-filer fra NOAA NCEI (1983–2017, lavt/midt/høyt via IR-topptrykk).** Vurdert og forkastet: PATMOS-x (daglige filer, svært store), CM SAF CLARA (krever bestilling), NCEP-reanalyse (modell, ikke måling; nedlasting blokkert), CERES/MODIS (ikke tilgjengelig herfra). ISCCP er avsluttet, så kilden har gruppe `static` og kjøres bare med `python -m pipeline.run --only isccp`; råfilene (≈1,7 GB) bufres i `pipeline/.cache/` (ikke i git), og bare breddebånd-aggregater (areavektet) lagres i `cloud_isccp_monthly.json`.
+30. **Hypotesen testes som positiv korrelasjon mellom −Φ og lavt skydekke** (årlige anomalier, lineært trendfjernet pga. kjente ISCCP-artefakter). 6 serier × 4 forsinkelser (−1…2 år) = 24 tester med Holm over alle, pluss delperioder (1984–2000, 2001–2016) og en styrkeberegning. Delperiodene er et «utforskende» tillegg og er ikke del av Holm-familien.

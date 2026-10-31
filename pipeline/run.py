@@ -28,6 +28,8 @@ def main(argv: list[str] | None = None) -> int:
         for src in all_sources():
             if wanted and src.id not in wanted:
                 continue
+            if not wanted and src.group == "static":
+                continue  # statiske kilder (avsluttede datasett) kjøres bare med --only
             if not wanted and a.group != "all" and src.group != a.group:
                 continue
             entry = run_source(src, manifest)
